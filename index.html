@@ -669,7 +669,8 @@ async function toggleFight(i,fight){
 function setFLT(i,txt){const el=document.querySelector('#det'+i+' .flt');if(el)el.textContent=txt;}
 
 async function loadComparison(i,fight){
-  const{reportCode,id:fightId,charName,classId,startTime:fStart,endTime:fEnd,name:bossName,encounterId}=fight;
+  const{reportCode,id:fightId,charName,startTime:fStart,endTime:fEnd,name:bossName,encounterId}=fight;
+  let classId=fight.classId;
   setFLT(i,'Fetching fight data...');
   const q=`query($code:String!,$fid:Int!){reportData{report(code:$code){table(fightIDs:[$fid],dataType:DamageDone) rankings(playerMetric:dps,compare:Parses) casts:events(fightIDs:[$fid],dataType:Casts,limit:10000){data} buffs:events(fightIDs:[$fid],dataType:Buffs,limit:10000){data} deaths:events(fightIDs:[$fid],dataType:Deaths,limit:50){data}}}}`;
   const res=await gql(q,{code:reportCode,fid:fightId});
@@ -694,6 +695,11 @@ async function loadComparison(i,fight){
       const sameClass=allPlayers.filter(p=>p.name?.toLowerCase()!==charName.toLowerCase()&&p.type===classId);
       if(sameClass.length)topSameSpecOutput=Math.max(...sameClass.map(p=>p.total||0));
     }
+  }catch(e){}
+  // Override classId from table data if available (more reliable than fight object)
+  try{
+    const meInTable=allPlayers.find(p=>p.name?.toLowerCase()===charName.toLowerCase());
+    if(meInTable&&meInTable.type)classId=meInTable.type;
   }catch(e){}
   const castEvents=rep?.casts?.data||[],buffEvents=rep?.buffs?.data||[];
   const deathEvents=rep?.deaths?.data||[];
@@ -751,6 +757,12 @@ Write 3-5 bullet points. SPECIFIC DATA with exact numbers only. Format: "- You u
   }catch(e){}
 
   const fightDuration=(fEnd-fStart)/1000;
+  // Targeted buff debug
+  console.log('classId:', classId, '| mySourceId:', mySourceId);
+  console.log('mybuffEvents sample:', mybuffEvents.slice(0,3).map(e=>({type:e.type,sid:e.sourceID,tid:e.targetID,spell:e.abilityGameID})));
+  console.log('mycastEvents sample:', mycastEvents.slice(0,3).map(e=>({type:e.type,sid:e.sourceID,spell:e.abilityGameID})));
+  const presentBuffs=Object.entries(myBuffs).filter(([k,v])=>v.present).map(([k,v])=>v.name);
+  console.log('Present buffs:', presentBuffs);
   renderFull(i,{charName,myOutput,topSameSpecOutput,myParse,mySpec,myBuffs,myDeaths,topParseBuffs,aiSummary,bossName,fightDuration,classId});
 }
 
