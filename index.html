@@ -360,6 +360,7 @@ const RAIDS={
 const ALL_BUFFS=[
   // Flasks - class specific
   {id:28518,name:'Flask of Relentless Assault',cat:'Flask',cls:[1,3,4,7,10]},
+  {id:28587,name:'Flask of Relentless Assault (alt)',cat:'Flask',cls:[1,3,4,7,10]},
   {id:28519,name:'Flask of Blinding Light',cat:'Flask',cls:[2,5,10]},
   {id:28520,name:'Flask of Pure Death',cat:'Flask',cls:[5,8,9]},
   {id:28521,name:'Flask of Mighty Restoration',cat:'Flask',cls:[2,5,7,10]},
@@ -401,7 +402,7 @@ const ALL_BUFFS=[
   {id:27658,name:'Smoked Talbuk Venison',cat:'Food',cls:[1,2,7]},
 
   // Potions - class specific
-  {id:22838,name:'Haste Potion',cat:'Potion',cls:[1,3,4,7,10]},
+  {id:28507,name:'Haste Potion',cat:'Potion',cls:[1,3,4,7,10]},
   {id:28508,name:'Destruction Potion',cat:'Potion',cls:[5,8,9]},
   {id:22832,name:'Super Mana Potion',cat:'Potion',cls:[2,5,7,8,9,10]},
   {id:28714,name:'Flame Cap',cat:'Potion',cls:[1,3,4,7,8,10]},
@@ -409,8 +410,9 @@ const ALL_BUFFS=[
   {id:27869,name:'Dark Rune',cat:'Potion',cls:[5,7,8,9,10]},
 
   // Drums - all non-shaman should use these
-  {id:35476,name:'Drums of Battle',cat:'Drums',cls:[1,2,3,4,5,8,9,10]},
+  {id:35166,name:'Drums of Battle',cat:'Drums',cls:[1,2,3,4,5,8,9,10]},
   {id:35477,name:'Drums of War',cat:'Drums',cls:[1,2,3,4,5,8,9,10]},
+  {id:35174,name:'Drums of War (alt)',cat:'Drums',cls:[1,2,3,4,5,8,9,10]},
   {id:35478,name:'Drums of Restoration',cat:'Drums',cls:[2,5,10]},
   {id:35279,name:'Drums of Speed',cat:'Drums',cls:[3,4,10]},
 
@@ -422,6 +424,7 @@ const ALL_BUFFS=[
 
   // Enchant procs - weapon based
   {id:25661,name:'Mongoose proc',cat:'Enchant',cls:[1,2,3,4,7,10]},
+  {id:35733,name:'Ancient Power (trinket)',cat:'Enchant',cls:[]},
   {id:33307,name:'Executioner proc',cat:'Enchant',cls:[1,4,10]},
   {id:28093,name:'Spellsurge proc',cat:'Enchant',cls:[5,7,8,9,10]},
 
@@ -430,11 +433,14 @@ const ALL_BUFFS=[
   {id:25899,name:'Greater Blessing of Might',cat:'Raid Buff',cls:[1,2,3,4,7,10]},
   {id:25290,name:'Greater Blessing of Wisdom',cat:'Raid Buff',cls:[2,5,7,8,9,10]},
   {id:27837,name:'Mark of the Wild',cat:'Raid Buff',cls:[]},
+  {id:21165,name:'Mark of the Wild (greater)',cat:'Raid Buff',cls:[]},
 
   // Cooldowns - class specific
   {id:2825,name:'Bloodlust',cat:'Cooldown',cls:[7]},
   {id:32182,name:'Heroism',cat:'Cooldown',cls:[7]},
   {id:16190,name:'Mana Tide Totem',cat:'Cooldown',cls:[7]},
+  {id:30823,name:'Shamanistic Rage',cat:'Cooldown',cls:[7]},
+  {id:33697,name:'Blood Fury (racial)',cat:'Cooldown',cls:[1,3,4,7,10]},
   {id:16166,name:'Elemental Mastery',cat:'Cooldown',cls:[7]},
   {id:12472,name:'Icy Veins',cat:'Cooldown',cls:[8]},
   {id:12042,name:'Arcane Power',cat:'Cooldown',cls:[8]},
@@ -463,9 +469,9 @@ const UPTIME_BUFFS=[
   // Shaman totems
   {id:25587,name:'Windfury Totem',cat:'Totem/Shout/Aura',cls:[7]},
   {id:25528,name:'Strength of Earth Totem',cat:'Totem/Shout/Aura',cls:[7]},
-  {id:3738,name:'Wrath of Air Totem',cat:'Totem/Shout/Aura',cls:[7]},
+  {id:33736,name:'Wrath of Air Totem',cat:'Totem/Shout/Aura',cls:[7]},
   {id:5394,name:'Healing Stream Totem',cat:'Totem/Shout/Aura',cls:[7]},
-  {id:10497,name:'Mana Spring Totem',cat:'Totem/Shout/Aura',cls:[7]},
+  {id:25547,name:'Mana Spring Totem',cat:'Totem/Shout/Aura',cls:[7]},
   // Warrior shouts
   {id:6673,name:'Battle Shout',cat:'Totem/Shout/Aura',cls:[1]},
   {id:1160,name:'Demoralizing Shout',cat:'Totem/Shout/Aura',cls:[1]},
@@ -758,20 +764,90 @@ Write 3-5 bullet points. SPECIFIC DATA with exact numbers only. Format: "- You u
   // Always render even if AI fails
 
   const fightDuration=(fEnd-fStart)/1000;
-  // Targeted buff debug
-  console.log('classId:', classId, '| mySourceId:', mySourceId);
-  // Get unique spell IDs from buff events targeted at player
-  const buffSpellIds=[...new Set(mybuffEvents.filter(e=>e.type==='applybuff').map(e=>e.abilityGameID))].sort((a,b)=>a-b);
-  const castSpellIds=[...new Set(mycastEvents.filter(e=>e.type==='cast').map(e=>e.abilityGameID))].sort((a,b)=>a-b);
-  console.log('All buff spell IDs on player:', buffSpellIds);
-  console.log('All cast spell IDs by player:', castSpellIds);
-  const presentBuffs=Object.entries(myBuffs).filter(([k,v])=>v.present).map(([k,v])=>v.name);
-  console.log('Present buffs:', presentBuffs);
-  renderFull(i,{charName,myOutput,topSameSpecOutput,myParse,mySpec,myBuffs,myDeaths,topParseBuffs,aiSummary,bossName,fightDuration,classId});
+
+  // Check which of our tracked buff IDs appear in events
+  const ourIds=new Set([28518,28587,22838,28564,34456,35166,35477,35174,28507,28508,35733,35478,35279,16323,16329,17038,25661,33307,28093]);
+  const foundIds=mybuffEvents.filter(e=>e.type==='applybuff'&&ourIds.has(e.abilityGameID)).map(e=>e.abilityGameID);
+  const foundCastIds=mycastEvents.filter(e=>e.type==='cast'&&ourIds.has(e.abilityGameID)).map(e=>e.abilityGameID);
+  console.log('Matched buff IDs:', [...new Set(foundIds)]);
+  console.log('Matched cast IDs:', [...new Set(foundCastIds)]);
+  // Also log ALL applybuff targetID=mySourceId with spell IDs not in our list
+  const allTargetBuffs=[...new Set(mybuffEvents.filter(e=>e.type==='applybuff'&&e.targetID===mySourceId).map(e=>e.abilityGameID))].sort((a,b)=>a-b);
+  console.log('All buffs applied TO player:', allTargetBuffs);
+  renderFull(i,{charName,myOutput,topSameSpecOutput,myParse,mySpec,myBuffs,myDeaths,topParseBuffs,aiSummary,bossName,fightDuration,classId,guildSameSpec});
+}
+
+function renderConsumables(myBuffs,guildSameSpec,topParseBuffs,classId){
+  const{buffs}=getClassBuffs(classId||0);
+  const consumableCats=['Flask','Elixir','Potion','Scroll','Food','Drums','Juju/World'];
+  const myConsumables=buffs.filter(b=>consumableCats.includes(b.cat)&&myBuffs[b.id]?.present);
+  const myCount=myConsumables.length;
+  const totalPossible=buffs.filter(b=>consumableCats.includes(b.cat)).length;
+
+  // Guild same spec average
+  let guildCount=null,guildNames=[];
+  if(guildSameSpec&&guildSameSpec.length){
+    const counts=guildSameSpec.map(g=>{
+      const gBufs=g.buffs||{};
+      return buffs.filter(b=>consumableCats.includes(b.cat)&&gBufs[b.id]?.present).length;
+    });
+    guildCount=parseFloat((counts.reduce((a,c)=>a+c,0)/counts.length).toFixed(1));
+  }
+
+  // Top parse average
+  let topCount=null;
+  if(topParseBuffs){
+    const topPresent=buffs.filter(b=>consumableCats.includes(b.cat)&&(topParseBuffs[b.id]?.pct||0)>=50).length;
+    topCount=topPresent;
+  }
+
+  const myColor=myCount>=totalPossible*0.8?'#3B6D11':myCount>=totalPossible*0.5?'#854F0B':'#A32D2D';
+  const guildDiff=guildCount!==null?myCount-guildCount:null;
+  const topDiff=topCount!==null?myCount-topCount:null;
+
+  // Missing consumables
+  const missing=buffs.filter(b=>consumableCats.includes(b.cat)&&!myBuffs[b.id]?.present&&(topParseBuffs?.[b.id]?.pct||0)>=60);
+
+  let html=`<div style="background:var(--bg2);border-radius:var(--rl);padding:12px 16px;margin-bottom:12px">
+    <div style="font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text2);margin-bottom:10px"><i class="ti ti-flask" style="font-size:13px;margin-right:4px"></i>Consumables used</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px">
+      <div style="text-align:center">
+        <div style="font-size:11px;color:var(--text2);margin-bottom:3px">You</div>
+        <div style="font-size:24px;font-weight:500;color:${myColor}">${myCount}</div>
+        <div style="font-size:11px;color:var(--text2)">of ${totalPossible} possible</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:11px;color:var(--text2);margin-bottom:3px">Same spec avg</div>
+        <div style="font-size:24px;font-weight:500">${guildCount!==null?guildCount:'—'}</div>
+        <div style="font-size:11px;color:${guildDiff===null?'var(--text2)':guildDiff>=0?'#3B6D11':'#A32D2D'}">${guildDiff===null?'no data':guildDiff>=0?'+'+guildDiff+' ahead':guildDiff+' behind'}</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:11px;color:var(--text2);margin-bottom:3px">Top parses avg</div>
+        <div style="font-size:24px;font-weight:500">${topCount!==null?topCount:'—'}</div>
+        <div style="font-size:11px;color:${topDiff===null?'var(--text2)':topDiff>=0?'#3B6D11':'#A32D2D'}">${topDiff===null?'no data':topDiff>=0?'+'+topDiff+' ahead':topDiff+' behind'}</div>
+      </div>
+    </div>`;
+
+  if(myConsumables.length){
+    html+=`<div style="font-size:11px;color:var(--text2);margin-bottom:4px;font-family:'Cinzel',serif;letter-spacing:.06em;text-transform:uppercase">Used:</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px">
+      ${myConsumables.map(b=>`<span style="background:#63992211;border:0.5px solid #63992244;border-radius:100px;padding:2px 10px;font-size:12px;color:#3B6D11">${b.name}</span>`).join('')}
+    </div>`;
+  }
+
+  if(missing.length){
+    html+=`<div style="font-size:11px;color:var(--text2);margin-bottom:4px;font-family:'Cinzel',serif;letter-spacing:.06em;text-transform:uppercase">Missing (used by 60%+ of top parses):</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px">
+      ${missing.map(b=>`<span style="background:#E24B4A11;border:0.5px solid #E24B4A44;border-radius:100px;padding:2px 10px;font-size:12px;color:#A32D2D">${b.name} <span style="opacity:.7">(${topParseBuffs[b.id].pct}% of top)</span></span>`).join('')}
+    </div>`;
+  }
+
+  html+=`</div>`;
+  return html;
 }
 
 function renderFull(i,data){
-  const{charName,myOutput,topSameSpecOutput,myParse,mySpec,myBuffs,myDeaths,topParseBuffs,aiSummary,bossName,fightDuration,classId}=data;
+  const{charName,myOutput,topSameSpecOutput,myParse,mySpec,myBuffs,myDeaths,topParseBuffs,aiSummary,bossName,fightDuration,classId,guildSameSpec}=data;
   const det=document.getElementById('det'+i);
   const pct=myParse!==null?Math.round(myParse):null;
 
@@ -797,7 +873,8 @@ function renderFull(i,data){
     </div>
   </div>`;
 
-  let html=`<div class="sgrid">${sumCards}</div>${top3Html}`;
+  const consHtml=renderConsumables(myBuffs,guildSameSpec,topParseBuffs,classId);
+  let html=`<div class="sgrid">${sumCards}</div>${consHtml}${top3Html}`;
 
   if(aiSummary){
     const bullets=aiSummary.split('\n').filter(l=>l.trim().startsWith('-')).map(l=>l.trim().replace(/^-\s*/,''));
