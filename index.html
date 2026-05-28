@@ -812,7 +812,6 @@ function renderFull(i,data){
       classUptimeList.filter(b=>b.cat===cat).forEach(b=>{
         const key='u_'+b.id,mine=myBuffs[key]?.uptime;
         const topPct=topParseBuffs?.['u_'+b.id]?.pct??null;
-        const diff=fmtPctDiff(mine??null,null);
         rows+=`<div class="crow"><div><div class="cn">${b.name}</div><div class="cs">uptime %</div></div><div class="cv">${mine!==null&&mine!==undefined?mine+'%':'—'}</div><div class="cv">—</div><div class="cv">${topPct!==null?topPct+'%':'—'}</div><div class="cd neu">—</div></div>`;
       });
     } else {
@@ -820,9 +819,9 @@ function renderFull(i,data){
         const mine=myBuffs[b.id];
         const topData=topParseBuffs?.[b.id];
         const topPct=topData?.pct??null;
-        if(!mine?.present&&(topPct===null||topPct===0))return;
         const myVal=mine?.present?(mine.count>1?mine.count+'×':'✓'):'✗';
-        rows+=`<div class="crow"><div><div class="cn">${b.name}</div><div class="cs">${b.cat}</div></div><div class="cv" style="color:${mine?.present?'#3B6D11':'#A32D2D'}">${myVal}</div><div class="cv">—</div><div class="cv">${topPct!==null?topPct+'%':'—'}</div><div class="cd neu">—</div></div>`;
+        const myColor=mine?.present?'#3B6D11':'#A32D2D';
+        rows+=`<div class="crow"><div><div class="cn">${b.name}</div><div class="cs">${b.cat}</div></div><div class="cv" style="color:${myColor}">${myVal}</div><div class="cv">—</div><div class="cv">${topPct!==null?topPct+'%':'—'}</div><div class="cd neu">—</div></div>`;
       });
     }
     if(rows)html+=`<div class="sdiv">${cat}</div>${hdr}${rows}`;
