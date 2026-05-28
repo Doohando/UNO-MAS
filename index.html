@@ -573,8 +573,28 @@ async function loadComparison(i,fight){
     }
   }catch(e){}
   const castEvents=rep?.casts?.data||[],buffEvents=rep?.buffs?.data||[];
-  const myDeaths=(rep?.deaths?.data||[]).length;
-  const myBuffs=extractBuffs(buffEvents,castEvents,fStart,fEnd);
+  const deathEvents=rep?.deaths?.data||[];
+  const myDeaths=deathEvents.length;
+
+  // Find my source ID from cast events
+  let mySourceId=null;
+  for(const ev of castEvents){
+    if(ev.source&&ev.source.name&&ev.source.name.toLowerCase()===charName.toLowerCase()){
+      mySourceId=ev.sourceID;break;
+    }
+  }
+  // Also try from buff events
+  if(!mySourceId){
+    for(const ev of buffEvents){
+      if(ev.source&&ev.source.name&&ev.source.name.toLowerCase()===charName.toLowerCase()){
+        mySourceId=ev.sourceID;break;
+      }
+    }
+  }
+
+  const mycastEvents=mySourceId?castEvents.filter(e=>e.sourceID===mySourceId):castEvents;
+  const mybuffEvents=mySourceId?buffEvents.filter(e=>e.sourceID===mySourceId):buffEvents;
+  const myBuffs=extractBuffs(mybuffEvents,mycastEvents,fStart,fEnd);
   const badge=document.getElementById('pb'+i);
   if(myParse!==null){const{cls,label}=parseBadge(myParse);badge.className='pbadge '+cls;badge.textContent=label;}
 
