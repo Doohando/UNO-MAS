@@ -754,7 +754,8 @@ Low uptime (<90%): ${lowUptime.length?lowUptime.join(', '):'none'}
 Write 3-5 bullet points. SPECIFIC DATA with exact numbers only. Format: "- You used X. Top parses average Y." No generic advice. Start each with "- ".`}]};
     const aiResp=await fetch(AI_PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payload})});
     if(aiResp.ok){const d=await aiResp.json();aiSummary=d.content?.map(c=>c.text||'').join('');}
-  }catch(e){}
+  }catch(e){console.log('AI summary skipped:', e.message);}
+  // Always render even if AI fails
 
   const fightDuration=(fEnd-fStart)/1000;
   // Targeted buff debug
