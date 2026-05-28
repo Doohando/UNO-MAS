@@ -10,13 +10,31 @@ exports.handler = async function(event) {
       body: '',
     };
   }
+  const clientId = process.env.WL_CLIENT_ID;
+  const clientSecret = process.env.WL_CLIENT_SECRET;
+  if (!clientId || !clientSecret) {
+    return {
+      statusCode: 500,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: 'WarcraftLogs credentials not configured on server.' }),
+    };
+  }
   let url, options;
   try {
     const parsed = JSON.parse(event.body);
     url = parsed.url;
-    options = parsed.options;
+    options = parsed.options || {};
+    if (url.includes('/oauth/token')) {
+      options.body = `grant_type=client_credentials&client_id=${encodeURIComponent(clientId)}&client_secret=${encodeURIComponent(clientSecret)}`;
+      options.method = 'POST';
+      options.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+    }
   } catch(e) {
-    return { statusCode: 400, headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify({ error: 'Invalid body' }) };
+    return {
+      statusCode: 400,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: 'Invalid body' }),
+    };
   }
   try {
     const response = await fetch(url, {
@@ -31,6 +49,10 @@ exports.handler = async function(event) {
       body: data,
     };
   } catch (err) {
-    return { statusCode: 500, headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify({ error: err.message }) };
+    return {
+      statusCode: 500,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: err.message }),
+    };
   }
 };
