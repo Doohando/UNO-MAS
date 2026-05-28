@@ -333,7 +333,7 @@ function setLoading(on,txt){
 }
 
 async function getToken(id,sec){
-  const data=await proxyFetch('https://www.warcraftlogs.com/oauth/token',{
+  const data=await proxyFetch('https://fresh.warcraftlogs.com/oauth/token',{
     method:'POST',
     headers:{'Content-Type':'application/x-www-form-urlencoded'},
     body:`grant_type=client_credentials&client_id=${encodeURIComponent(id)}&client_secret=${encodeURIComponent(sec)}`
@@ -343,7 +343,7 @@ async function getToken(id,sec){
 }
 
 async function gql(query,vars){
-  return proxyFetch('https://www.warcraftlogs.com/api/v2/client',{
+  return proxyFetch('https://fresh.warcraftlogs.com/api/v2/client',{
     method:'POST',
     headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
     body:JSON.stringify({query,variables:vars})
