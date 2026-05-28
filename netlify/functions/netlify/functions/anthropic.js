@@ -10,13 +10,24 @@ exports.handler = async function(event) {
       body: '',
     };
   }
-  let apiKey, payload;
+  const apiKey = process.env.ANTHROPIC_KEY;
+  if (!apiKey) {
+    return {
+      statusCode: 500,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: 'Anthropic API key not configured on server.' }),
+    };
+  }
+  let payload;
   try {
     const parsed = JSON.parse(event.body);
-    apiKey = parsed.apiKey;
     payload = parsed.payload;
   } catch(e) {
-    return { statusCode: 400, headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify({ error: 'Invalid body' }) };
+    return {
+      statusCode: 400,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: 'Invalid body' }),
+    };
   }
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -35,6 +46,10 @@ exports.handler = async function(event) {
       body: data,
     };
   } catch (err) {
-    return { statusCode: 500, headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify({ error: err.message }) };
+    return {
+      statusCode: 500,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: err.message }),
+    };
   }
 };
