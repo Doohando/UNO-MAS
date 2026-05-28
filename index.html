@@ -589,8 +589,12 @@ async function loadComparison(i,fight){
     }
   }
 
+  // Buffs RECEIVED by player (targetID) + buffs CAST by player (sourceID)
+  // Casts BY player (sourceID)
   const mycastEvents=mySourceId?castEvents.filter(e=>e.sourceID===mySourceId):castEvents;
-  const mybuffEvents=mySourceId?buffEvents.filter(e=>e.sourceID===mySourceId):buffEvents;
+  // For buffs: we want buffs applied TO the player (targetID) for consumables/flasks
+  // AND buffs applied BY the player (sourceID) for things like totems they dropped
+  const mybuffEvents=mySourceId?buffEvents.filter(e=>e.targetID===mySourceId||e.sourceID===mySourceId):buffEvents;
   const myBuffs=extractBuffs(mybuffEvents,mycastEvents,fStart,fEnd);
   const badge=document.getElementById('pb'+i);
   if(myParse!==null){const{cls,label}=parseBadge(myParse);badge.className='pbadge '+cls;badge.textContent=label;}
@@ -625,18 +629,6 @@ Write 3-5 bullet points. SPECIFIC DATA with exact numbers only. Format: "- You u
   }catch(e){}
 
   const fightDuration=(fEnd-fStart)/1000;
-  // Debug: log first few buff and cast events to console
-  console.log('=== DEBUG ===');
-  console.log('charName:', charName);
-  console.log('mySourceId:', mySourceId);
-  console.log('Total buff events:', buffEvents.length);
-  console.log('Total cast events:', castEvents.length);
-  console.log('My buff events:', mybuffEvents.length);
-  console.log('My cast events:', mycastEvents.length);
-  if(buffEvents.length>0)console.log('Sample buff event:', JSON.stringify(buffEvents[0]));
-  if(castEvents.length>0)console.log('Sample cast event:', JSON.stringify(castEvents[0]));
-  console.log('myBuffs sample:', JSON.stringify(Object.entries(myBuffs).slice(0,3)));
-  console.log('=== END DEBUG ===');
   renderFull(i,{charName,myOutput,topSameSpecOutput,myParse,mySpec,myBuffs,myDeaths,topParseBuffs,aiSummary,bossName,fightDuration});
 }
 
