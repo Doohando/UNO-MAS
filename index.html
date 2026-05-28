@@ -1,0 +1,591 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uno Mas — TBC Parse Comparator</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-bg: #ffffff;
+    --color-bg-secondary: #f5f4f0;
+    --color-border: rgba(0,0,0,0.12);
+    --color-border-secondary: rgba(0,0,0,0.25);
+    --color-text: #1a1a1a;
+    --color-text-secondary: #666;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Crimson Pro', serif; background: var(--color-bg); color: var(--color-text); min-height: 100vh; }
+  .container { max-width: 780px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+  .hdr { border-bottom: 0.5px solid var(--color-border); padding: 1.75rem 0 1.5rem; margin-bottom: 1.75rem; }
+  .hdr-inner { display: flex; align-items: center; gap: 14px; }
+  .logo { width: 48px; height: 48px; background: #B8960C; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .guild-name { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 700; letter-spacing: .04em; }
+  .guild-name span { color: #B8960C; }
+  .guild-tagline { font-size: 13px; color: var(--color-text-secondary); margin-top: 2px; font-style: italic; }
+  .guild-meta { display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .guild-tag { display: inline-flex; align-items: center; gap: 5px; background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: 100px; padding: 3px 10px; font-size: 12px; color: var(--color-text-secondary); }
+  .guild-tag.gold { background: #B8960C11; border-color: #B8960C44; color: #854F0B; }
+  .sec-label { font-family: 'Cinzel', serif; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--color-text-secondary); margin-bottom: 10px; display: block; }
+  .card { background: var(--color-bg); border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1rem; }
+  .card-gold { border-left: 3px solid #B8960C; border-radius: 0 var(--radius-lg) var(--radius-lg) 0; }
+  .row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+  .fg { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 130px; }
+  label { font-size: 11px; color: var(--color-text-secondary); letter-spacing: .05em; text-transform: uppercase; }
+  input, select { background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: var(--radius-md); padding: 9px 12px; font-family: 'Crimson Pro', serif; font-size: 15px; color: var(--color-text); outline: none; transition: border-color .15s; width: 100%; }
+  input:focus, select:focus { border-color: #B8960C; }
+  .btn { background: #B8960C; color: #fff; border: none; border-radius: var(--radius-md); padding: 10px 24px; font-family: 'Cinzel', serif; font-size: 13px; font-weight: 600; letter-spacing: .08em; cursor: pointer; transition: opacity .15s, transform .1s; width: 100%; margin-top: 4px; }
+  .btn:hover { opacity: .85; } .btn:active { transform: scale(.98); } .btn:disabled { opacity: .4; cursor: not-allowed; }
+  .btn-sm { width: auto; margin-top: 0; padding: 7px 16px; font-size: 12px; }
+  .errmsg { color: #A32D2D; font-size: 13px; margin-top: 8px; display: none; }
+  .errmsg.on { display: block; }
+  .successmsg { color: #3B6D11; font-size: 13px; margin-top: 8px; display: none; }
+  .successmsg.on { display: block; }
+  .dots { display: none; align-items: center; gap: 6px; padding: .75rem 0; color: var(--color-text-secondary); font-size: 14px; }
+  .dots.on { display: flex; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: #B8960C; animation: pulse 1.2s ease-in-out infinite; }
+  .dot:nth-child(2) { animation-delay: .2s; } .dot:nth-child(3) { animation-delay: .4s; }
+  @keyframes pulse { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
+  .hidden { display: none !important; }
+  .results { display: none; margin-top: 1rem; }
+  .results.on { display: block; }
+  .fight { background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); padding: .9rem 1.1rem; margin-bottom: 8px; cursor: pointer; transition: border-color .15s; }
+  .fight:hover { border-color: #B8960C88; }
+  .fight.open { border-color: #B8960C; background: var(--color-bg); }
+  .fight-hdr { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .fight-name { font-family: 'Cinzel', serif; font-size: 14px; font-weight: 600; }
+  .fight-meta { font-size: 12px; color: var(--color-text-secondary); margin-top: 3px; }
+  .pbadge { font-size: 11px; font-weight: 600; font-family: 'Cinzel', serif; padding: 3px 10px; border-radius: 100px; letter-spacing: .04em; white-space: nowrap; }
+  .pg{background:#B8960C22;color:#B8960C} .pp{background:#7F77DD22;color:#534AB7}
+  .pb{background:#378ADD22;color:#185FA5} .pn{background:#63992222;color:#3B6D11}
+  .pw{background:var(--color-bg-secondary);color:var(--color-text-secondary);border:0.5px solid var(--color-border)}
+  .detail { display: none; margin-top: .75rem; border-top: 0.5px solid var(--color-border); padding-top: .75rem; }
+  .detail.on { display: block; }
+  .sec-div { font-family: 'Cinzel', serif; font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--color-text-secondary); margin: 14px 0 8px; padding-bottom: 4px; border-bottom: 0.5px solid var(--color-border); }
+  .cmp-header { display: grid; grid-template-columns: 1fr 60px 65px 60px 60px; gap: 6px; padding: 4px 0 7px; border-bottom: 0.5px solid var(--color-border-secondary); margin-bottom: 2px; }
+  .cmp-header span { font-size: 10px; font-family: 'Cinzel', serif; letter-spacing: .07em; text-transform: uppercase; color: var(--color-text-secondary); text-align: center; }
+  .cmp-header span:first-child { text-align: left; }
+  .cmp-row { display: grid; grid-template-columns: 1fr 60px 65px 60px 60px; gap: 6px; align-items: center; padding: 6px 0; border-bottom: 0.5px solid var(--color-border); font-size: 13px; }
+  .cmp-row:last-child { border-bottom: none; }
+  .cmp-val { text-align: center; font-weight: 500; font-size: 13px; }
+  .cmp-diff { text-align: center; font-size: 12px; font-weight: 500; border-radius: 4px; padding: 1px 5px; }
+  .diff-bad { color: #A32D2D; background: #E24B4A11; }
+  .diff-good { color: #3B6D11; background: #63992211; }
+  .diff-neutral { color: var(--color-text-secondary); }
+  .cmp-name { font-size: 13px; }
+  .cmp-sub { font-size: 11px; color: var(--color-text-secondary); margin-top: 1px; }
+  .sum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; margin-bottom: 12px; }
+  .sum-card { background: var(--color-bg-secondary); border-radius: var(--radius-md); padding: 8px 10px; }
+  .sum-lbl { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 2px; }
+  .sum-val { font-size: 19px; font-weight: 500; }
+  .raid-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+  .raid-pill { background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: 100px; padding: 5px 14px; font-size: 13px; cursor: pointer; transition: all .15s; font-family: 'Crimson Pro', serif; color: var(--color-text); }
+  .raid-pill:hover { border-color: #B8960C88; }
+  .raid-pill.active { background: #B8960C; color: #fff; border-color: #B8960C; }
+  .boss-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .boss-pill { background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: 100px; padding: 4px 12px; font-size: 12px; cursor: pointer; transition: all .15s; font-family: 'Crimson Pro', serif; color: var(--color-text-secondary); }
+  .boss-pill:hover { border-color: #B8960C88; color: var(--color-text); }
+  .boss-pill.active { background: #B8960C22; border-color: #B8960C88; color: #854F0B; }
+  .filter-note { font-size: 11px; color: var(--color-text-secondary); margin-top: 6px; }
+  .ai-block { background: var(--color-bg-secondary); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-top: 10px; font-size: 13.5px; line-height: 1.7; }
+  .ai-label { font-family: 'Cinzel', serif; font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #B8960C; margin-bottom: 6px; }
+  .creds-saved-badge { display: inline-flex; align-items: center; gap: 5px; background: #63992211; border: 0.5px solid #63992244; border-radius: 100px; padding: 3px 10px; font-size: 12px; color: #3B6D11; margin-left: 8px; }
+  .creds-change { font-size: 12px; color: #B8960C; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; margin-left: 10px; }
+  .lock-screen { text-align: center; padding: 3rem 1rem; }
+  .lock-icon { font-size: 40px; margin-bottom: .75rem; color: #888; }
+  .lock-title { font-family: 'Cinzel', serif; font-size: 18px; font-weight: 600; margin-bottom: .4rem; }
+  .lock-sub { font-size: 13.5px; color: var(--color-text-secondary); margin-bottom: 1.5rem; font-style: italic; }
+  .lock-wrap { display: flex; gap: 8px; max-width: 300px; margin: 0 auto; }
+  .shake { animation: shake .3s ease; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .divider { border: none; border-top: 0.5px solid var(--color-border); margin: 1rem 0; }
+  .wm { text-align: center; font-size: 11px; color: var(--color-text-secondary); margin-top: 2rem; letter-spacing: .05em; }
+  @media(max-width:600px){
+    .cmp-header,.cmp-row{grid-template-columns:1fr 50px 50px 45px 45px;font-size:12px}
+    .guild-name{font-size:18px}
+  }
+</style>
+</head>
+<body>
+
+<div id="lockScreenOuter" class="container">
+  <div class="hdr">
+    <div class="hdr-inner">
+      <div class="logo">
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="9" y="8" width="10" height="15" rx="2" fill="#fff" opacity="0.95"/>
+          <rect x="9" y="8" width="10" height="5" rx="1.5" fill="#fff" opacity="0.6"/>
+          <path d="M19 11 Q24 11 24 14.5 Q24 18 19 18" stroke="#fff" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.9"/>
+          <rect x="10.5" y="9.5" width="2" height="8" rx="1" fill="#B8960C" opacity="0.5"/>
+          <rect x="13.5" y="9.5" width="2" height="6" rx="1" fill="#B8960C" opacity="0.4"/>
+          <path d="M11 7.5 Q11.5 5.5 12 7 Q12.5 5 13 7 Q13.5 5.5 14 7" stroke="#fff" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.7"/>
+          <path d="M15 6.5 Q15.5 4.5 16 6.5" stroke="#fff" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.6"/>
+        </svg>
+      </div>
+      <div>
+        <div class="guild-name"><span>Uno</span> Mas</div>
+        <div class="guild-tagline">The casual guild that became tryhard</div>
+      </div>
+    </div>
+    <div class="guild-meta">
+      <span class="guild-tag"><i class="ti ti-map-pin"></i> Spineshatter PVP · EU</span>
+      <span class="guild-tag"><i class="ti ti-sword"></i> TBC Classic</span>
+      <span class="guild-tag gold"><i class="ti ti-chart-bar"></i> Raid Performance Analyzer</span>
+    </div>
+  </div>
+  <div class="lock-screen">
+    <div class="lock-icon"><i class="ti ti-shield-lock"></i></div>
+    <div class="lock-title">Guild members only</div>
+    <div class="lock-sub">Enter the guild password to access your performance data.</div>
+    <div class="lock-wrap" id="lockWrap">
+      <input type="password" id="pwInput" placeholder="Password" onkeydown="if(event.key==='Enter')checkPw()" style="flex:1">
+      <button class="btn" onclick="checkPw()" style="width:auto;margin-top:0">Enter</button>
+    </div>
+    <div class="errmsg" id="pwErr" style="text-align:center;margin-top:10px">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<div id="mainApp" class="hidden container">
+  <div class="hdr">
+    <div class="hdr-inner">
+      <div class="logo">
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="9" y="8" width="10" height="15" rx="2" fill="#fff" opacity="0.95"/>
+          <rect x="9" y="8" width="10" height="5" rx="1.5" fill="#fff" opacity="0.6"/>
+          <path d="M19 11 Q24 11 24 14.5 Q24 18 19 18" stroke="#fff" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.9"/>
+          <rect x="10.5" y="9.5" width="2" height="8" rx="1" fill="#B8960C" opacity="0.5"/>
+          <rect x="13.5" y="9.5" width="2" height="6" rx="1" fill="#B8960C" opacity="0.4"/>
+          <path d="M11 7.5 Q11.5 5.5 12 7 Q12.5 5 13 7 Q13.5 5.5 14 7" stroke="#fff" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.7"/>
+          <path d="M15 6.5 Q15.5 4.5 16 6.5" stroke="#fff" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.6"/>
+        </svg>
+      </div>
+      <div>
+        <div class="guild-name"><span>Uno</span> Mas</div>
+        <div class="guild-tagline">The casual guild that became tryhard</div>
+      </div>
+    </div>
+    <div class="guild-meta">
+      <span class="guild-tag"><i class="ti ti-map-pin"></i> Spineshatter PVP · EU</span>
+      <span class="guild-tag"><i class="ti ti-sword"></i> TBC Classic</span>
+      <span class="guild-tag gold"><i class="ti ti-chart-bar"></i> Raid Performance Analyzer</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div>
+        <span class="sec-label" style="margin-bottom:0;display:inline">API credentials</span>
+        <span class="creds-saved-badge hidden" id="savedBadge"><i class="ti ti-check" style="font-size:12px"></i> Saved</span>
+      </div>
+      <span class="creds-change hidden" id="credsChangeBtn" onclick="toggleCredsEdit()">Edit credentials</span>
+    </div>
+    <div id="credsFields" style="margin-top:12px">
+      <div class="row">
+        <div class="fg"><label>WarcraftLogs Client ID</label><input type="text" id="wlId" placeholder="Client ID" autocomplete="off"></div>
+        <div class="fg"><label>WarcraftLogs Client Secret</label><input type="password" id="wlSec" placeholder="Client Secret" autocomplete="off"></div>
+      </div>
+      <div class="fg" style="margin-bottom:10px"><label>Anthropic API Key</label><input type="password" id="anthropicKey" placeholder="sk-ant-..." autocomplete="off"></div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-sm" onclick="saveCredentials()">Save credentials</button>
+        <span style="font-size:12px;color:var(--color-text-secondary)">Saved to your browser only.</span>
+      </div>
+      <div class="errmsg" id="credsErr"></div>
+      <div class="successmsg" id="credsSuccess">Credentials saved!</div>
+    </div>
+  </div>
+
+  <div class="card card-gold">
+    <span class="sec-label">Your character</span>
+    <div class="row">
+      <div class="fg"><label>Character name</label><input type="text" id="charName" placeholder="e.g. Thrallmaster"></div>
+    </div>
+    <span class="sec-label" style="margin-top:8px">Raid tier</span>
+    <div class="raid-pills" id="raidPills"></div>
+    <div id="bossPillsWrap" style="display:none">
+      <span class="sec-label" style="margin-top:10px">Boss filter <span style="font-size:10px;font-weight:400;text-transform:none;letter-spacing:0">(all selected by default)</span></span>
+      <div class="boss-pills" id="bossPills"></div>
+    </div>
+    <div class="filter-note" id="filterNote">Select a raid tier above, then click Analyze.</div>
+    <div class="errmsg" id="errMsg"></div>
+    <button class="btn" id="goBtn" onclick="startAnalysis()" style="margin-top:12px">Analyze my performance</button>
+  </div>
+
+  <div class="dots" id="loadDots"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span id="loadTxt">Connecting...</span></div>
+
+  <div class="results" id="results">
+    <span class="sec-label" id="resultsLabel">Kills — click a fight to compare</span>
+    <div id="fightList"></div>
+  </div>
+
+  <hr class="divider">
+  <div class="wm"><span style="font-family:'Cinzel',serif;letter-spacing:.06em">Uno Mas</span> · Spineshatter EU · The casual guild that became tryhard</div>
+</div>
+
+<script>
+const DEFAULT_SERVER='spineshatter',DEFAULT_REGION='eu';
+const PROXY='/.netlify/functions/warcraftlogs';
+const AI_PROXY='/.netlify/functions/anthropic';
+let token=null,selectedRaid=null,selectedBosses=new Set(),credsEditing=true;
+
+function checkPw(){
+  const val=document.getElementById('pwInput').value.trim().toLowerCase();
+  if(val==='uno mas'){
+    document.getElementById('lockScreenOuter').classList.add('hidden');
+    document.getElementById('mainApp').classList.remove('hidden');
+    loadSavedCreds();
+  } else {
+    const w=document.getElementById('lockWrap');
+    w.classList.remove('shake');void w.offsetWidth;w.classList.add('shake');
+    document.getElementById('pwErr').classList.add('on');
+    document.getElementById('pwInput').value='';
+  }
+}
+
+function loadSavedCreds(){
+  try{
+    const saved=localStorage.getItem('unomasCredentials');
+    if(saved){
+      const c=JSON.parse(saved);
+      if(c.wlId)document.getElementById('wlId').value=c.wlId;
+      if(c.wlSec)document.getElementById('wlSec').value=c.wlSec;
+      if(c.anthropicKey)document.getElementById('anthropicKey').value=c.anthropicKey;
+      if(c.wlId&&c.wlSec)showCredsSaved();
+    }
+  }catch(e){}
+}
+
+function saveCredentials(){
+  const wlId=document.getElementById('wlId').value.trim();
+  const wlSec=document.getElementById('wlSec').value.trim();
+  const anthropicKey=document.getElementById('anthropicKey').value.trim();
+  const ce=document.getElementById('credsErr');ce.classList.remove('on');
+  if(!wlId||!wlSec){ce.textContent='Please enter at least your WarcraftLogs Client ID and Secret.';ce.classList.add('on');return;}
+  localStorage.setItem('unomasCredentials',JSON.stringify({wlId,wlSec,anthropicKey}));
+  document.getElementById('credsSuccess').classList.add('on');
+  setTimeout(()=>showCredsSaved(),1200);
+}
+
+function showCredsSaved(){
+  document.getElementById('credsFields').classList.add('hidden');
+  document.getElementById('savedBadge').classList.remove('hidden');
+  document.getElementById('credsChangeBtn').classList.remove('hidden');
+  document.getElementById('credsChangeBtn').textContent='Edit credentials';
+  credsEditing=false;
+}
+
+function toggleCredsEdit(){
+  if(credsEditing){showCredsSaved();}
+  else{
+    document.getElementById('credsFields').classList.remove('hidden');
+    document.getElementById('savedBadge').classList.add('hidden');
+    document.getElementById('credsChangeBtn').textContent='Hide';
+    document.getElementById('credsSuccess').classList.remove('on');
+    credsEditing=true;
+  }
+}
+
+async function proxyFetch(url, options){
+  const r=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url,options})});
+  if(!r.ok)throw new Error('Proxy error '+r.status);
+  return r.json();
+}
+
+const RAIDS={
+  'Karazhan':{encounters:[{id:651,name:"Attumen the Huntsman"},{id:652,name:"Moroes"},{id:653,name:"Maiden of Virtue"},{id:655,name:"The Curator"},{id:657,name:"Shade of Aran"},{id:658,name:"Netherspite"},{id:660,name:"Prince Malchezaar"},{id:661,name:"Nightbane"}]},
+  "Gruul's Lair":{encounters:[{id:648,name:"High King Maulgar"},{id:649,name:"Gruul the Dragonkiller"}]},
+  "Magtheridon's Lair":{encounters:[{id:651,name:"Magtheridon"}]},
+  'Serpentshrine Cavern':{encounters:[{id:627,name:"Hydross the Unstable"},{id:628,name:"The Lurker Below"},{id:631,name:"Leotheras the Blind"},{id:632,name:"Fathom-Lord Karathress"},{id:630,name:"Morogrim Tidewalker"},{id:626,name:"Lady Vashj"}]},
+  'Tempest Keep':{encounters:[{id:730,name:"Al'ar"},{id:731,name:"Void Reaver"},{id:732,name:"High Astromancer Solarian"},{id:733,name:"Kael'thas Sunstrider"}]},
+  'Hyjal Summit':{encounters:[{id:618,name:"Rage Winterchill"},{id:619,name:"Anetheron"},{id:620,name:"Kaz'rogal"},{id:621,name:"Azgalor"},{id:622,name:"Archimonde"}]},
+  'Black Temple':{encounters:[{id:601,name:"High Warlord Naj'entus"},{id:602,name:"Supremus"},{id:603,name:"Shade of Akama"},{id:604,name:"Teron Gorefiend"},{id:605,name:"Gurtogg Bloodboil"},{id:606,name:"Reliquary of Souls"},{id:607,name:"Mother Shahraz"},{id:608,name:"The Illidari Council"},{id:609,name:"Illidan Stormrage"}]},
+  "Zul'Aman":{encounters:[{id:752,name:"Nalorakk"},{id:753,name:"Akil'zon"},{id:754,name:"Jan'alai"},{id:755,name:"Halazzi"},{id:756,name:"Hex Lord Malacrass"},{id:736,name:"Zul'jin"}]},
+  'Sunwell Plateau':{encounters:[{id:724,name:"Kalecgos"},{id:725,name:"Brutallus"},{id:726,name:"Felmyst"},{id:727,name:"Eredar Twins"},{id:728,name:"M'uru"},{id:729,name:"Kil'jaeden"}]}
+};
+
+const ALL_BUFFS=[
+  {id:28518,name:'Flask of Relentless Assault',cat:'Flask'},{id:28519,name:'Flask of Blinding Light',cat:'Flask'},{id:28520,name:'Flask of Pure Death',cat:'Flask'},{id:28521,name:'Flask of Mighty Restoration',cat:'Flask'},{id:28522,name:'Flask of Fortification',cat:'Flask'},{id:17539,name:'Flask of Distilled Wisdom',cat:'Flask'},
+  {id:22491,name:'Elixir of Major Agility',cat:'Elixir'},{id:28103,name:'Elixir of Major Strength',cat:'Elixir'},{id:28488,name:'Elixir of Major Firepower',cat:'Elixir'},{id:28486,name:'Elixir of Major Shadow Power',cat:'Elixir'},{id:28490,name:'Elixir of Major Frost Power',cat:'Elixir'},{id:28491,name:'Elixir of Major Arcane Power',cat:'Elixir'},{id:28493,name:'Elixir of Healing Power',cat:'Elixir'},{id:28494,name:'Elixir of Draenic Wisdom',cat:'Elixir'},{id:28495,name:'Elixir of Major Mageblood',cat:'Elixir'},{id:39627,name:'Elixir of Mastery',cat:'Elixir'},{id:28497,name:"Adept's Elixir",cat:'Elixir'},{id:28509,name:'Elixir of the Mongoose',cat:'Elixir'},
+  {id:33721,name:'Scroll of Agility VI',cat:'Scroll'},{id:33726,name:'Scroll of Strength VI',cat:'Scroll'},{id:33727,name:'Scroll of Stamina VI',cat:'Scroll'},{id:33728,name:'Scroll of Intellect VI',cat:'Scroll'},{id:33729,name:'Scroll of Spirit VI',cat:'Scroll'},{id:27498,name:'Scroll of Agility V',cat:'Scroll'},{id:27503,name:'Scroll of Strength V',cat:'Scroll'},{id:27499,name:'Scroll of Intellect V',cat:'Scroll'},
+  {id:33254,name:'Spicy Crawdad',cat:'Food'},{id:33261,name:'Blackened Basilisk',cat:'Food'},{id:33263,name:'Roasted Clefthoof',cat:'Food'},{id:33265,name:'Warp Burger',cat:'Food'},{id:33271,name:'Golden Fish Sticks',cat:'Food'},{id:33272,name:'Poached Bluefish',cat:'Food'},{id:27657,name:'Grilled Mudfish',cat:'Food'},{id:27658,name:'Smoked Talbuk Venison',cat:'Food'},
+  {id:22838,name:'Haste Potion',cat:'Potion'},{id:28508,name:'Destruction Potion',cat:'Potion'},{id:22832,name:'Super Mana Potion',cat:'Potion'},{id:28714,name:'Flame Cap',cat:'Potion'},{id:38929,name:'Fel Mana Potion',cat:'Potion'},{id:27869,name:'Dark Rune',cat:'Potion'},
+  {id:35476,name:'Drums of Battle',cat:'Drums'},{id:35477,name:'Drums of War',cat:'Drums'},{id:35478,name:'Drums of Restoration',cat:'Drums'},{id:35279,name:'Drums of Speed',cat:'Drums'},
+  {id:16323,name:'Juju Power',cat:'Juju/World'},{id:16329,name:'Juju Might',cat:'Juju/World'},{id:17038,name:'Winterfall Firewater',cat:'Juju/World'},{id:11405,name:'Elixir of the Giants',cat:'Juju/World'},
+  {id:25661,name:'Mongoose proc',cat:'Enchant'},{id:33307,name:'Executioner proc',cat:'Enchant'},{id:28093,name:'Spellsurge proc',cat:'Enchant'},
+  {id:25898,name:'Greater Blessing of Kings',cat:'Raid Buff'},{id:25899,name:'Greater Blessing of Might',cat:'Raid Buff'},{id:25290,name:'Greater Blessing of Wisdom',cat:'Raid Buff'},{id:27837,name:'Mark of the Wild',cat:'Raid Buff'},
+  {id:2825,name:'Bloodlust',cat:'Cooldown'},{id:32182,name:'Heroism',cat:'Cooldown'},{id:12472,name:'Icy Veins',cat:'Cooldown'},{id:12042,name:'Arcane Power',cat:'Cooldown'},{id:11129,name:'Combustion',cat:'Cooldown'},{id:31884,name:'Avenging Wrath',cat:'Cooldown'},{id:1719,name:'Recklessness',cat:'Cooldown'},{id:12292,name:'Death Wish',cat:'Cooldown'},{id:19574,name:'Bestial Wrath',cat:'Cooldown'},{id:3045,name:'Rapid Fire',cat:'Cooldown'},{id:13750,name:'Adrenaline Rush',cat:'Cooldown'},{id:13877,name:'Blade Flurry',cat:'Cooldown'},{id:10060,name:'Power Infusion',cat:'Cooldown'},{id:34433,name:'Shadowfiend',cat:'Cooldown'},{id:16190,name:'Mana Tide Totem',cat:'Cooldown'},{id:29166,name:'Innervate',cat:'Cooldown'},
+];
+
+const UPTIME_BUFFS=[
+  {id:25587,name:'Windfury Totem',cat:'Totem/Shout/Aura'},{id:25528,name:'Strength of Earth Totem',cat:'Totem/Shout/Aura'},{id:3738,name:'Wrath of Air Totem',cat:'Totem/Shout/Aura'},{id:6673,name:'Battle Shout',cat:'Totem/Shout/Aura'},{id:1160,name:'Demoralizing Shout',cat:'Totem/Shout/Aura'},{id:19506,name:'Trueshot Aura',cat:'Totem/Shout/Aura'},{id:24858,name:'Moonkin Aura',cat:'Totem/Shout/Aura'},{id:17007,name:'Leader of the Pack',cat:'Totem/Shout/Aura'},
+  {id:14325,name:"Hunter's Mark",cat:'Debuff Uptime'},{id:26993,name:'Faerie Fire',cat:'Debuff Uptime'},{id:33876,name:'Mangle',cat:'Debuff Uptime'},{id:27228,name:'Curse of Elements',cat:'Debuff Uptime'},{id:15258,name:'Shadow Weaving',cat:'Debuff Uptime'},{id:34914,name:'Vampiric Touch',cat:'Debuff Uptime'},
+];
+
+function showErr(m){const e=document.getElementById('errMsg');e.textContent=m;e.classList.add('on')}
+function clearErr(){document.getElementById('errMsg').classList.remove('on')}
+function setLoading(on,txt){
+  const d=document.getElementById('loadDots');
+  if(on){d.classList.add('on');document.getElementById('loadTxt').textContent=txt||'Loading...';document.getElementById('goBtn').disabled=true}
+  else{d.classList.remove('on');document.getElementById('goBtn').disabled=false}
+}
+
+async function getToken(id,sec){
+  const data=await proxyFetch('https://www.warcraftlogs.com/oauth/token',{
+    method:'POST',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:`grant_type=client_credentials&client_id=${encodeURIComponent(id)}&client_secret=${encodeURIComponent(sec)}`
+  });
+  if(!data.access_token)throw new Error('Authentication failed. Check your Client ID and Secret.');
+  return data.access_token;
+}
+
+async function gql(query,vars){
+  return proxyFetch('https://www.warcraftlogs.com/api/v2/client',{
+    method:'POST',
+    headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+    body:JSON.stringify({query,variables:vars})
+  });
+}
+
+function buildRaidPills(){
+  const c=document.getElementById('raidPills');
+  Object.keys(RAIDS).forEach(name=>{
+    const p=document.createElement('button');p.className='raid-pill';p.textContent=name;
+    p.onclick=()=>selectRaid(name,p);c.appendChild(p);
+  });
+}
+function selectRaid(name,el){
+  selectedRaid=name;selectedBosses=new Set();
+  document.querySelectorAll('.raid-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  const raid=RAIDS[name];
+  const wrap=document.getElementById('bossPillsWrap'),bc=document.getElementById('bossPills');
+  bc.innerHTML='';wrap.style.display='block';
+  raid.encounters.forEach(enc=>{
+    const p=document.createElement('button');p.className='boss-pill active';p.textContent=enc.name;
+    p.onclick=()=>toggleBoss(enc.id,p);selectedBosses.add(enc.id);bc.appendChild(p);
+  });
+  document.getElementById('filterNote').textContent=`Showing all ${raid.encounters.length} bosses in ${name}. Click to filter.`;
+}
+function toggleBoss(id,el){
+  if(selectedBosses.has(id)){if(selectedBosses.size===1)return;selectedBosses.delete(id);el.classList.remove('active');}
+  else{selectedBosses.add(id);el.classList.add('active');}
+  document.getElementById('filterNote').textContent=`Showing ${selectedBosses.size} boss${selectedBosses.size!==1?'es':''} in ${selectedRaid}.`;
+}
+function parseBadge(p){
+  if(p===null)return{cls:'pw',label:'No parse'};
+  const v=Math.round(p);
+  if(v>=95)return{cls:'pg',label:'Gold '+v};if(v>=75)return{cls:'pp',label:'Purple '+v};
+  if(v>=50)return{cls:'pb',label:'Blue '+v};if(v>=25)return{cls:'pn',label:'Green '+v};
+  return{cls:'pw',label:'Gray '+v};
+}
+function fmtDiff(mine,compare){
+  if(mine===null||compare===null||compare===undefined)return{text:'—',cls:'diff-neutral'};
+  const diff=parseFloat((mine-compare).toFixed(1));
+  if(Math.abs(diff)<0.05)return{text:'same',cls:'diff-neutral'};
+  return{text:(diff>0?'+':'')+diff,cls:diff>0?'diff-good':'diff-bad'};
+}
+function fmtPctDiff(mine,compare){
+  if(mine===null||compare===null||compare===undefined)return{text:'—',cls:'diff-neutral'};
+  const diff=Math.round(mine-compare);
+  if(diff===0)return{text:'same',cls:'diff-neutral'};
+  return{text:(diff>0?'+':'')+diff+'%',cls:diff>0?'diff-good':'diff-bad'};
+}
+
+async function startAnalysis(){
+  clearErr();
+  if(!selectedRaid)return showErr('Please select a raid tier first.');
+  const name=document.getElementById('charName').value.trim();
+  const clientId=document.getElementById('wlId').value.trim();
+  const secret=document.getElementById('wlSec').value.trim();
+  if(!name)return showErr('Please enter your character name.');
+  if(!clientId||!secret)return showErr('Please enter your WarcraftLogs credentials above.');
+  try{
+    setLoading(true,'Authenticating with WarcraftLogs...');
+    token=await getToken(clientId,secret);
+    setLoading(true,`Fetching ${selectedRaid} logs for ${name}...`);
+    const q=`query($name:String!,$server:String!,$region:String!){characterData{character(name:$name,serverSlug:$server,serverRegion:$region){name classID recentReports(limit:25){data{code title fights(killType:Kills){id name kill startTime endTime averageItemLevel encounterID}}}}}}`;
+    const res=await gql(q,{name,server:DEFAULT_SERVER,region:DEFAULT_REGION});
+    const char=res?.data?.characterData?.character;
+    if(!char)throw new Error(`Character "${name}" not found on Spineshatter EU. Check spelling.`);
+    const bossNameMap={};
+    RAIDS[selectedRaid].encounters.forEach(e=>bossNameMap[e.name.toLowerCase()]=e.id);
+    const fights=[];
+    (char.recentReports?.data||[]).forEach(rep=>{
+      (rep.fights||[]).filter(f=>f.kill).forEach(f=>{
+        const encId=f.encounterID||(bossNameMap[f.name?.toLowerCase()]);
+        const inFilter=!selectedBosses.size||selectedBosses.has(encId)||[...selectedBosses].some(id=>{const enc=RAIDS[selectedRaid].encounters.find(e=>e.id===id);return enc&&f.name&&f.name.toLowerCase().includes(enc.name.toLowerCase().split(' ')[0].toLowerCase());});
+        if(!inFilter)return;
+        fights.push({...f,reportCode:rep.code,reportTitle:rep.title,charName:char.name,classId:char.classID,encounterId:encId});
+      });
+    });
+    if(!fights.length)throw new Error(`No ${selectedRaid} kills found for ${name} on Spineshatter EU. Make sure your logs are public.`);
+    setLoading(false);
+    document.getElementById('resultsLabel').textContent=`${selectedRaid} kills for ${name} · Uno Mas · Spineshatter EU`;
+    renderFights(fights.slice(0,20));
+    document.getElementById('results').classList.add('on');
+  }catch(e){setLoading(false);showErr(e.message||'Something went wrong.');}
+}
+
+function renderFights(fights){
+  const c=document.getElementById('fightList');c.innerHTML='';
+  fights.forEach((f,i)=>{
+    const d=document.createElement('div');d.className='fight';d.id='f'+i;
+    const dur=f.endTime&&f.startTime?Math.round((f.endTime-f.startTime)/1000)+'s':'';
+    d.innerHTML=`<div class="fight-hdr"><span class="fight-name">${f.name}</span><span class="pbadge pw" id="pb${i}"><i class="ti ti-chevron-down" style="font-size:13px"></i> Expand</span></div>
+    <div class="fight-meta"><i class="ti ti-scroll" style="font-size:12px;vertical-align:-1px;margin-right:3px"></i>${f.reportTitle||f.reportCode}${dur?` &nbsp;·&nbsp; ${dur}`:''}${f.averageItemLevel?` &nbsp;·&nbsp; ilvl ${Math.round(f.averageItemLevel)}`:''}</div>
+    <div class="detail" id="det${i}"></div>`;
+    d.onclick=()=>toggleFight(i,f);c.appendChild(d);
+  });
+}
+
+const loaded={};
+async function toggleFight(i,fight){
+  const card=document.getElementById('f'+i),det=document.getElementById('det'+i);
+  const isOpen=det.classList.contains('on');
+  document.querySelectorAll('.fight').forEach(c=>c.classList.remove('open'));
+  document.querySelectorAll('.detail').forEach(a=>a.classList.remove('on'));
+  if(isOpen)return;
+  card.classList.add('open');det.classList.add('on');
+  if(loaded[i])return;
+  loaded[i]=true;
+  det.innerHTML=`<div class="dots on" style="padding:8px 0"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span class="flt" style="font-size:13px">Fetching fight data...</span></div>`;
+  try{await loadComparison(i,fight);}
+  catch(e){document.getElementById('det'+i).innerHTML=`<div style="color:#A32D2D;font-size:13px;padding:8px 0">Error: ${e.message}</div>`;}
+}
+
+function setFLT(i,txt){const el=document.querySelector('#det'+i+' .flt');if(el)el.textContent=txt;}
+
+function extractBuffs(buffEvents,castEvents,fStart,fEnd){
+  const r={};
+  ALL_BUFFS.forEach(b=>{
+    const applies=buffEvents.filter(e=>(e.type==='applybuff'||e.type==='refreshbuff')&&e.ability?.guid===b.id);
+    const casts=castEvents.filter(e=>e.type==='cast'&&e.ability?.guid===b.id);
+    r[b.id]={present:applies.length>0||casts.length>0,count:Math.max(applies.length,casts.length),name:b.name,cat:b.cat};
+  });
+  UPTIME_BUFFS.forEach(b=>{
+    const relevant=buffEvents.filter(e=>e.ability?.guid===b.id);
+    let uptime=null;
+    if(relevant.length){
+      const applies=relevant.filter(e=>e.type==='applybuff'||e.type==='refreshbuff');
+      const removes=relevant.filter(e=>e.type==='removebuff');
+      if(applies.length){
+        let covered=0,activeStart=null;
+        const evs=[...applies.map(e=>({t:e.timestamp,type:'a'})),...removes.map(e=>({t:e.timestamp,type:'r'}))].sort((a,b)=>a.t-b.t);
+        for(const ev of evs){
+          if(ev.type==='a'&&activeStart===null)activeStart=Math.max(ev.t,fStart);
+          else if(ev.type==='r'&&activeStart!==null){covered+=Math.max(0,ev.t-activeStart);activeStart=null;}
+        }
+        if(activeStart!==null)covered+=Math.max(0,fEnd-activeStart);
+        const total=fEnd-fStart;uptime=total>0?Math.min(100,Math.round((covered/total)*100)):null;
+      }
+    }
+    r['u_'+b.id]={uptime,name:b.name,cat:b.cat,isUptime:true};
+  });
+  return r;
+}
+
+async function loadComparison(i,fight){
+  const{reportCode,id:fightId,charName,classId,startTime:fStart,endTime:fEnd,name:bossName,encounterId}=fight;
+  setFLT(i,'Fetching your fight data...');
+  const q=`query($code:String!,$fid:Int!){reportData{report(code:$code){table(fightIDs:[$fid],dataType:DamageDone) rankings(playerMetric:dps,compare:Parses) casts:events(fightIDs:[$fid],dataType:Casts,limit:10000){data} buffs:events(fightIDs:[$fid],dataType:Buffs,limit:10000){data} deaths:events(fightIDs:[$fid],dataType:Deaths,limit:50){data}}}}`;
+  const res=await gql(q,{code:reportCode,fid:fightId});
+  const rep=res?.data?.reportData?.report;
+  let myOutput=null,topOutput=null,myParse=null,mySpec=null,allPlayers=[];
+  try{const tbl=typeof rep?.table==='string'?JSON.parse(rep.table):rep?.table;allPlayers=tbl?.data?.entries||[];const me=allPlayers.find(e=>e.name?.toLowerCase()===charName.toLowerCase());if(me)myOutput=me.total;if(allPlayers.length)topOutput=Math.max(...allPlayers.map(e=>e.total||0));}catch(e){}
+  try{const rnk=typeof rep?.rankings==='string'?JSON.parse(rep.rankings):rep?.rankings;const me=(rnk?.data||[]).find(r=>r.name?.toLowerCase()===charName.toLowerCase());if(me){myParse=me.rankPercent;mySpec=me.spec;}}catch(e){}
+  const castEvents=rep?.casts?.data||[],buffEvents=rep?.buffs?.data||[];
+  const myDeaths=(rep?.deaths?.data||[]).length;
+  const myBuffs=extractBuffs(buffEvents,castEvents,fStart,fEnd);
+  const badge=document.getElementById('pb'+i);
+  if(myParse!==null){const{cls,label}=parseBadge(myParse);badge.className='pbadge '+cls;badge.textContent=label;}
+  const sameClass=allPlayers.filter(p=>p.name?.toLowerCase()!==charName.toLowerCase()&&p.type===classId);
+  const guildBuffsList=sameClass.slice(0,4).map(gp=>({name:gp.name,output:gp.total,buffs:extractBuffs(buffEvents,castEvents,fStart,fEnd)}));
+  setFLT(i,'Fetching top parse data...');
+  let topParseBuffs=null;
+  try{
+    if(encounterId){
+      const topQ=`query($enc:Int!,$cls:Int!){worldData{encounter(id:$enc){characterRankings(classID:$cls,metric:dps,includeCombatantInfo:true)}}}`;
+      const topRes=await gql(topQ,{enc:encounterId,cls:classId});
+      const rankings=topRes?.data?.worldData?.encounter?.characterRankings?.rankings||[];
+      if(rankings.length){
+        topParseBuffs={};
+        ALL_BUFFS.forEach(b=>{const w=rankings.filter(r=>(r.buffs||[]).some(bf=>bf.id===b.id)||(r.gear||[]).some(g=>g.permanentEnchant===b.id)).length;topParseBuffs[b.id]={pct:Math.round(w/rankings.length*100),n:rankings.length,name:b.name,cat:b.cat};});
+        UPTIME_BUFFS.forEach(b=>{const w=rankings.filter(r=>(r.buffs||[]).some(bf=>bf.id===b.id)).length;topParseBuffs['u_'+b.id]={pct:Math.round(w/rankings.length*100),n:rankings.length,name:b.name,cat:b.cat};});
+      }
+    }
+  }catch(e){}
+  const anthropicKey=document.getElementById('anthropicKey').value.trim();
+  let aiSummary=null;
+  if(anthropicKey){
+    setFLT(i,'Generating AI summary...');
+    try{
+      const missingBuffs=ALL_BUFFS.filter(b=>!myBuffs[b.id]?.present&&topParseBuffs?.[b.id]?.pct>50).map(b=>`${b.name} (${topParseBuffs[b.id].pct}% of top parses)`);
+      const lowUptime=UPTIME_BUFFS.filter(b=>{const u=myBuffs['u_'+b.id]?.uptime;return u!==null&&u!==undefined&&u<90;}).map(b=>`${b.name}: ${myBuffs['u_'+b.id].uptime}%`);
+      const payload={model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:`TBC Classic raid analyst for Uno Mas guild (Spineshatter EU). Data for ${charName} on ${bossName}.
+Parse: ${myParse!==null?Math.round(myParse)+'%':'unknown'} | Output: ${myOutput?(myOutput/1000).toFixed(1)+'k':'?'} | Top: ${topOutput?(topOutput/1000).toFixed(1)+'k':'?'} | Spec: ${mySpec||'?'} | Deaths: ${myDeaths}
+Missing buffs vs top parses (>50%): ${missingBuffs.length?missingBuffs.join(', '):'none'}
+Low uptime (<90%): ${lowUptime.length?lowUptime.join(', '):'none'}
+Write 3-5 bullet points. Each must be a SPECIFIC DATA STATEMENT with exact numbers only. No generic advice. Only data comparisons with numbers. Start each with "- ".`}]};
+      const aiResp=await fetch(AI_PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({apiKey:anthropicKey,payload})});
+      if(aiResp.ok){const d=await aiResp.json();aiSummary=d.content?.map(c=>c.text||'').join('');}
+    }catch(e){}
+  }
+  renderFull(i,{charName,myOutput,topOutput,myParse,mySpec,myBuffs,myDeaths,guildBuffsList,topParseBuffs,aiSummary,bossName});
+}
+
+function renderFull(i,data){
+  const{charName,myOutput,topOutput,myParse,mySpec,myBuffs,myDeaths,guildBuffsList,topParseBuffs,aiSummary,bossName}=data;
+  const det=document.getElementById('det'+i);
+  const pct=myParse!==null?Math.round(myParse):null;
+  const hasGuild=guildBuffsList.length>0;
+  const sumCards=[
+    myOutput?`<div class="sum-card"><div class="sum-lbl">Your output</div><div class="sum-val">${(myOutput/1000).toFixed(1)}k</div></div>`:'',
+    topOutput?`<div class="sum-card"><div class="sum-lbl">Top in raid</div><div class="sum-val">${(topOutput/1000).toFixed(1)}k</div></div>`:'',
+    pct!==null?`<div class="sum-card"><div class="sum-lbl">Parse</div><div class="sum-val" style="color:${pct>=75?'#3B6D11':pct>=50?'#854F0B':'#A32D2D'}">${pct}%</div></div>`:'',
+    myDeaths?`<div class="sum-card"><div class="sum-lbl">Deaths</div><div class="sum-val" style="color:#A32D2D">${myDeaths}</div></div>`:'',
+    mySpec?`<div class="sum-card"><div class="sum-lbl">Spec</div><div class="sum-val" style="font-size:13px">${mySpec}</div></div>`:'',
+  ].filter(Boolean).join('');
+  let html=`<div class="sum-grid">${sumCards}</div>`;
+  if(aiSummary){
+    const bullets=aiSummary.split('\n').filter(l=>l.trim().startsWith('-')).map(l=>l.trim().replace(/^-\s*/,''));
+    if(bullets.length)html+=`<div class="ai-block"><div class="ai-label"><i class="ti ti-sparkles" style="font-size:13px;margin-right:4px"></i>AI data summary</div>${bullets.map(b=>`<div style="display:flex;gap:8px;margin-bottom:5px"><span style="color:#B8960C;flex-shrink:0">—</span><span>${b}</span></div>`).join('')}</div>`;
+  }
+  const cats=['Flask','Elixir','Scroll','Food','Potion','Drums','Juju/World','Enchant','Raid Buff','Cooldown','Totem/Shout/Aura','Debuff Uptime'];
+  const hdr=`<div class="cmp-header"><span>Buff / ability</span><span>You</span><span>${hasGuild?'Guild avg':'Guild'}</span><span>Top %</span><span>vs guild</span></div>`;
+  cats.forEach(cat=>{
+    const isUptime=cat==='Totem/Shout/Aura'||cat==='Debuff Uptime';
+    let rows='';
+    if(isUptime){
+      UPTIME_BUFFS.filter(b=>b.cat===cat).forEach(b=>{
+        const key='u_'+b.id,mine=myBuffs[key]?.uptime;
+        if(mine===null||mine===undefined)return;
+        const gVals=guildBuffsList.map(g=>g.buffs[key]?.uptime).filter(v=>v!=null);
+        const gAvg=gVals.length?Math.round(gVals.reduce((a,c)=>a+c,0)/gVals.length):null;
+        const topPct=topParseBuffs?.['u_'+b.id]?.pct??null;
+        const diff=fmtPctDiff(mine,gAvg);
+        rows+=`<div class="cmp-row"><div><div class="cmp-name">${b.name}</div><div class="cmp-sub">uptime %</div></div><div class="cmp-val">${mine}%</div><div class="cmp-val">${gAvg!==null?gAvg+'%':'—'}</div><div class="cmp-val">${topPct!==null?topPct+'%':'—'}</div><div class="cmp-diff ${diff.cls}">${diff.text}</div></div>`;
+      });
+    } else {
+      ALL_BUFFS.filter(b=>b.cat===cat).forEach(b=>{
+        const mine=myBuffs[b.id],topData=topParseBuffs?.[b.id];
+        const gVals=guildBuffsList.map(g=>g.buffs[b.id]?.count||0);
+        const gAvg=hasGuild?parseFloat((gVals.reduce((a,c)=>a+c,0)/gVals.length).toFixed(1)):null;
+        const topPct=topData?.pct??null;
+        if(!mine?.present&&(gAvg===0||gAvg===null)&&(topPct===null||topPct===0))return;
+        const diff=fmtDiff(mine?.count||0,gAvg);
+        const myVal=mine?.present?(mine.count>1?mine.count+'×':'✓'):'✗';
+        rows+=`<div class="cmp-row"><div><div class="cmp-name">${b.name}</div><div class="cmp-sub">${b.cat}</div></div><div class="cmp-val" style="color:${mine?.present?'#3B6D11':'#A32D2D'}">${myVal}</div><div class="cmp-val">${gAvg!==null?gAvg:'—'}</div><div class="cmp-val">${topPct!==null?topPct+'%':'—'}</div><div class="cmp-diff ${diff.cls}">${diff.text}</div></div>`;
+      });
+    }
+    if(rows)html+=`<div class="sec-div">${cat}</div>${hdr}${rows}`;
+  });
+  det.innerHTML=html;
+}
+buildRaidPills();
+</script>
+</body>
+</html>
