@@ -760,8 +760,11 @@ Write 3-5 bullet points. SPECIFIC DATA with exact numbers only. Format: "- You u
   const fightDuration=(fEnd-fStart)/1000;
   // Targeted buff debug
   console.log('classId:', classId, '| mySourceId:', mySourceId);
-  console.log('mybuffEvents sample:', mybuffEvents.slice(0,3).map(e=>({type:e.type,sid:e.sourceID,tid:e.targetID,spell:e.abilityGameID})));
-  console.log('mycastEvents sample:', mycastEvents.slice(0,3).map(e=>({type:e.type,sid:e.sourceID,spell:e.abilityGameID})));
+  // Get unique spell IDs from buff events targeted at player
+  const buffSpellIds=[...new Set(mybuffEvents.filter(e=>e.type==='applybuff').map(e=>e.abilityGameID))].sort((a,b)=>a-b);
+  const castSpellIds=[...new Set(mycastEvents.filter(e=>e.type==='cast').map(e=>e.abilityGameID))].sort((a,b)=>a-b);
+  console.log('All buff spell IDs on player:', buffSpellIds);
+  console.log('All cast spell IDs by player:', castSpellIds);
   const presentBuffs=Object.entries(myBuffs).filter(([k,v])=>v.present).map(([k,v])=>v.name);
   console.log('Present buffs:', presentBuffs);
   renderFull(i,{charName,myOutput,topSameSpecOutput,myParse,mySpec,myBuffs,myDeaths,topParseBuffs,aiSummary,bossName,fightDuration,classId});
