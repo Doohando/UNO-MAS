@@ -607,16 +607,19 @@ Write 3-5 bullet points. SPECIFIC DATA with exact numbers only. Format: "- You u
     if(aiResp.ok){const d=await aiResp.json();aiSummary=d.content?.map(c=>c.text||'').join('');}
   }catch(e){}
 
-  renderFull(i,{charName,myOutput,topSameSpecOutput,myParse,mySpec,myBuffs,myDeaths,topParseBuffs,aiSummary,bossName});
+  const fightDuration=(fEnd-fStart)/1000;
+  renderFull(i,{charName,myOutput,topSameSpecOutput,myParse,mySpec,myBuffs,myDeaths,topParseBuffs,aiSummary,bossName,fightDuration});
 }
 
 function renderFull(i,data){
-  const{charName,myOutput,topSameSpecOutput,myParse,mySpec,myBuffs,myDeaths,topParseBuffs,aiSummary,bossName}=data;
+  const{charName,myOutput,topSameSpecOutput,myParse,mySpec,myBuffs,myDeaths,topParseBuffs,aiSummary,bossName,fightDuration}=data;
   const det=document.getElementById('det'+i);
   const pct=myParse!==null?Math.round(myParse):null;
 
+  const myDps=myOutput&&fightDuration?Math.round(myOutput/fightDuration):null;
   const sumCards=[
     myOutput?`<div class="sc"><div class="sl2">Your output</div><div class="sv">${(myOutput/1000).toFixed(1)}k</div></div>`:'',
+    myDps?`<div class="sc"><div class="sl2">Your DPS</div><div class="sv">${myDps.toLocaleString()}</div></div>`:'',
     topSameSpecOutput?`<div class="sc"><div class="sl2">Top same spec</div><div class="sv">${(topSameSpecOutput/1000).toFixed(1)}k</div></div>`:'',
     pct!==null?`<div class="sc"><div class="sl2">Parse</div><div class="sv" style="color:${pct>=75?'#3B6D11':pct>=50?'#854F0B':'#A32D2D'}">${pct}%</div></div>`:'',
     myDeaths?`<div class="sc"><div class="sl2">Deaths</div><div class="sv" style="color:#A32D2D">${myDeaths}</div></div>`:'',
