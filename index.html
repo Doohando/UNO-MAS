@@ -190,29 +190,7 @@ input:focus,select:focus{border-color:#B8960C}
     </div>
   </div>
 
-  <!-- Credentials -->
-  <div class="card">
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-      <div>
-        <span class="slbl" style="margin-bottom:0;display:inline">API credentials</span>
-        <span class="csaved hidden" id="savedBadge"><i class="ti ti-check" style="font-size:12px"></i> Saved</span>
-      </div>
-      <span class="cedit hidden" id="credsChangeBtn" onclick="toggleCredsEdit()">Edit credentials</span>
-    </div>
-    <div id="credsFields" style="margin-top:12px">
-      <div class="row">
-        <div class="fg"><label>WarcraftLogs Client ID</label><input type="text" id="wlId" placeholder="Client ID" autocomplete="off"></div>
-        <div class="fg"><label>WarcraftLogs Client Secret</label><input type="password" id="wlSec" placeholder="Client Secret" autocomplete="off"></div>
-      </div>
-      <div class="fg" style="margin-bottom:10px"><label>Anthropic API Key</label><input type="password" id="anthropicKey" placeholder="sk-ant-..." autocomplete="off"></div>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <button class="btn btn-sm" onclick="saveCredentials()">Save credentials</button>
-        <span style="font-size:12px;color:var(--text2)">Saved to your browser only.</span>
-      </div>
-      <div class="err" id="credsErr"></div>
-      <div class="ok" id="credsOk">Credentials saved!</div>
-    </div>
-  </div>
+
 
   <!-- Tabs -->
   <div class="tabs">
@@ -295,7 +273,6 @@ function checkPw(){
   if(v==='uno mas'){
     document.getElementById('lockOuter').classList.add('hidden');
     document.getElementById('mainApp').classList.remove('hidden');
-    loadSavedCreds();
   } else {
     const w=document.getElementById('lockWrap');
     w.classList.remove('shake');void w.offsetWidth;w.classList.add('shake');
@@ -356,11 +333,8 @@ async function proxyFetch(url,options){
 
 async function ensureToken(){
   if(token)return;
-  const clientId=document.getElementById('wlId').value.trim();
-  const secret=document.getElementById('wlSec').value.trim();
-  if(!clientId||!secret)throw new Error('Please enter your WarcraftLogs credentials above.');
-  const data=await proxyFetch(WL_TOKEN,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:`grant_type=client_credentials&client_id=${encodeURIComponent(clientId)}&client_secret=${encodeURIComponent(secret)}`});
-  if(!data.access_token)throw new Error('Authentication failed. Check your Client ID and Secret.');
+  const data=await proxyFetch(WL_TOKEN,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:''});
+  if(!data.access_token)throw new Error('Authentication failed. Server credentials may not be configured.');
   token=data.access_token;
 }
 
@@ -619,22 +593,19 @@ async function loadComparison(i,fight){
     }
   }catch(e){}
 
-  const anthropicKey=document.getElementById('anthropicKey').value.trim();
   let aiSummary=null;
-  if(anthropicKey){
+  try{
     setFLT(i,'Generating AI summary...');
-    try{
-      const missingBuffs=ALL_BUFFS.filter(b=>!myBuffs[b.id]?.present&&topParseBuffs?.[b.id]?.pct>50).map(b=>`${b.name} (${topParseBuffs[b.id].pct}% of top parses)`);
-      const lowUptime=UPTIME_BUFFS.filter(b=>{const u=myBuffs['u_'+b.id]?.uptime;return u!==null&&u!==undefined&&u<90;}).map(b=>`${b.name}: ${myBuffs['u_'+b.id].uptime}%`);
-      const payload={model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:`TBC Classic raid analyst for Uno Mas (Spineshatter EU). ${charName} on ${bossName}.
+    const missingBuffs=ALL_BUFFS.filter(b=>!myBuffs[b.id]?.present&&topParseBuffs?.[b.id]?.pct>50).map(b=>`${b.name} (${topParseBuffs[b.id].pct}% of top parses)`);
+    const lowUptime=UPTIME_BUFFS.filter(b=>{const u=myBuffs['u_'+b.id]?.uptime;return u!==null&&u!==undefined&&u<90;}).map(b=>`${b.name}: ${myBuffs['u_'+b.id].uptime}%`);
+    const payload={model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:`TBC Classic raid analyst for Uno Mas (Spineshatter EU). ${charName} on ${bossName}.
 Parse: ${myParse!==null?Math.round(myParse)+'%':'?'} | Output: ${myOutput?(myOutput/1000).toFixed(1)+'k':'?'} | Top same spec: ${topSameSpecOutput?(topSameSpecOutput/1000).toFixed(1)+'k':'?'} | Spec: ${mySpec||'?'} | Deaths: ${myDeaths}
 Missing buffs vs top parses (>50%): ${missingBuffs.length?missingBuffs.join(', '):'none'}
 Low uptime (<90%): ${lowUptime.length?lowUptime.join(', '):'none'}
 Write 3-5 bullet points. SPECIFIC DATA with exact numbers only. Format: "- You used X. Top parses average Y." No generic advice. Start each with "- ".`}]};
-      const aiResp=await fetch(AI_PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({apiKey:anthropicKey,payload})});
-      if(aiResp.ok){const d=await aiResp.json();aiSummary=d.content?.map(c=>c.text||'').join('');}
-    }catch(e){}
-  }
+    const aiResp=await fetch(AI_PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payload})});
+    if(aiResp.ok){const d=await aiResp.json();aiSummary=d.content?.map(c=>c.text||'').join('');}
+  }catch(e){}
 
   renderFull(i,{charName,myOutput,topSameSpecOutput,myParse,mySpec,myBuffs,myDeaths,topParseBuffs,aiSummary,bossName});
 }
