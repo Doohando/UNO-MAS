@@ -428,15 +428,16 @@ function toggleBoss(id,el){
   document.getElementById('filterNote').textContent=`Showing ${selBosses.size} boss${selBosses.size!==1?'es':''} in ${selRaid}.`;
 }
 
+function getSpellId(e){return e.abilityGameID||e.ability?.guid||e.ability?.id||0;}
 function extractBuffs(buffEvents,castEvents,fStart,fEnd){
   const r={};
   ALL_BUFFS.forEach(b=>{
-    const applies=buffEvents.filter(e=>(e.type==='applybuff'||e.type==='refreshbuff')&&e.ability?.guid===b.id);
-    const casts=castEvents.filter(e=>e.type==='cast'&&e.ability?.guid===b.id);
+    const applies=buffEvents.filter(e=>(e.type==='applybuff'||e.type==='refreshbuff')&&getSpellId(e)===b.id);
+    const casts=castEvents.filter(e=>e.type==='cast'&&getSpellId(e)===b.id);
     r[b.id]={present:applies.length>0||casts.length>0,count:Math.max(applies.length,casts.length),name:b.name,cat:b.cat};
   });
   UPTIME_BUFFS.forEach(b=>{
-    const relevant=buffEvents.filter(e=>e.ability?.guid===b.id);
+    const relevant=buffEvents.filter(e=>getSpellId(e)===b.id);
     let uptime=null;
     if(relevant.length){
       const applies=relevant.filter(e=>e.type==='applybuff'||e.type==='refreshbuff');
@@ -576,19 +577,15 @@ async function loadComparison(i,fight){
   const deathEvents=rep?.deaths?.data||[];
   const myDeaths=deathEvents.length;
 
-  // Find my source ID from cast events
+  // Find my source ID from player list
   let mySourceId=null;
-  for(const ev of castEvents){
-    if(ev.source&&ev.source.name&&ev.source.name.toLowerCase()===charName.toLowerCase()){
-      mySourceId=ev.sourceID;break;
-    }
-  }
-  // Also try from buff events
+  const meInPlayers=allPlayers.find(p=>p.name?.toLowerCase()===charName.toLowerCase());
+  if(meInPlayers&&meInPlayers.id)mySourceId=meInPlayers.id;
+  // Fallback: scan cast events for matching name
   if(!mySourceId){
-    for(const ev of buffEvents){
-      if(ev.source&&ev.source.name&&ev.source.name.toLowerCase()===charName.toLowerCase()){
-        mySourceId=ev.sourceID;break;
-      }
+    for(const ev of castEvents){
+      if(ev.source&&ev.source.name&&ev.source.name.toLowerCase()===charName.toLowerCase()){mySourceId=ev.sourceID;break;}
+      if(ev.sourceID&&ev.name&&ev.name.toLowerCase()===charName.toLowerCase()){mySourceId=ev.sourceID;break;}
     }
   }
 
