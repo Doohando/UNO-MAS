@@ -8,115 +8,130 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --color-bg: #ffffff;
-    --color-bg-secondary: #f5f4f0;
-    --color-border: rgba(0,0,0,0.12);
-    --color-border-secondary: rgba(0,0,0,0.25);
-    --color-text: #1a1a1a;
-    --color-text-secondary: #666;
-    --radius-md: 8px;
-    --radius-lg: 12px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Crimson Pro', serif; background: var(--color-bg); color: var(--color-text); min-height: 100vh; }
-  .container { max-width: 780px; margin: 0 auto; padding: 0 1.5rem 4rem; }
-  .hdr { border-bottom: 0.5px solid var(--color-border); padding: 1.75rem 0 1.5rem; margin-bottom: 1.75rem; }
-  .hdr-inner { display: flex; align-items: center; gap: 14px; }
-  .logo { width: 48px; height: 48px; background: #B8960C; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .guild-name { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 700; letter-spacing: .04em; }
-  .guild-name span { color: #B8960C; }
-  .guild-tagline { font-size: 13px; color: var(--color-text-secondary); margin-top: 2px; font-style: italic; }
-  .guild-meta { display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-  .guild-tag { display: inline-flex; align-items: center; gap: 5px; background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: 100px; padding: 3px 10px; font-size: 12px; color: var(--color-text-secondary); }
-  .guild-tag.gold { background: #B8960C11; border-color: #B8960C44; color: #854F0B; }
-  .sec-label { font-family: 'Cinzel', serif; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--color-text-secondary); margin-bottom: 10px; display: block; }
-  .card { background: var(--color-bg); border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1rem; }
-  .card-gold { border-left: 3px solid #B8960C; border-radius: 0 var(--radius-lg) var(--radius-lg) 0; }
-  .row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
-  .fg { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 130px; }
-  label { font-size: 11px; color: var(--color-text-secondary); letter-spacing: .05em; text-transform: uppercase; }
-  input, select { background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: var(--radius-md); padding: 9px 12px; font-family: 'Crimson Pro', serif; font-size: 15px; color: var(--color-text); outline: none; transition: border-color .15s; width: 100%; }
-  input:focus, select:focus { border-color: #B8960C; }
-  .btn { background: #B8960C; color: #fff; border: none; border-radius: var(--radius-md); padding: 10px 24px; font-family: 'Cinzel', serif; font-size: 13px; font-weight: 600; letter-spacing: .08em; cursor: pointer; transition: opacity .15s, transform .1s; width: 100%; margin-top: 4px; }
-  .btn:hover { opacity: .85; } .btn:active { transform: scale(.98); } .btn:disabled { opacity: .4; cursor: not-allowed; }
-  .btn-sm { width: auto; margin-top: 0; padding: 7px 16px; font-size: 12px; }
-  .errmsg { color: #A32D2D; font-size: 13px; margin-top: 8px; display: none; }
-  .errmsg.on { display: block; }
-  .successmsg { color: #3B6D11; font-size: 13px; margin-top: 8px; display: none; }
-  .successmsg.on { display: block; }
-  .dots { display: none; align-items: center; gap: 6px; padding: .75rem 0; color: var(--color-text-secondary); font-size: 14px; }
-  .dots.on { display: flex; }
-  .dot { width: 6px; height: 6px; border-radius: 50%; background: #B8960C; animation: pulse 1.2s ease-in-out infinite; }
-  .dot:nth-child(2) { animation-delay: .2s; } .dot:nth-child(3) { animation-delay: .4s; }
-  @keyframes pulse { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
-  .hidden { display: none !important; }
-  .results { display: none; margin-top: 1rem; }
-  .results.on { display: block; }
-  .fight { background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); padding: .9rem 1.1rem; margin-bottom: 8px; cursor: pointer; transition: border-color .15s; }
-  .fight:hover { border-color: #B8960C88; }
-  .fight.open { border-color: #B8960C; background: var(--color-bg); }
-  .fight-hdr { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-  .fight-name { font-family: 'Cinzel', serif; font-size: 14px; font-weight: 600; }
-  .fight-meta { font-size: 12px; color: var(--color-text-secondary); margin-top: 3px; }
-  .pbadge { font-size: 11px; font-weight: 600; font-family: 'Cinzel', serif; padding: 3px 10px; border-radius: 100px; letter-spacing: .04em; white-space: nowrap; }
-  .pg{background:#B8960C22;color:#B8960C} .pp{background:#7F77DD22;color:#534AB7}
-  .pb{background:#378ADD22;color:#185FA5} .pn{background:#63992222;color:#3B6D11}
-  .pw{background:var(--color-bg-secondary);color:var(--color-text-secondary);border:0.5px solid var(--color-border)}
-  .detail { display: none; margin-top: .75rem; border-top: 0.5px solid var(--color-border); padding-top: .75rem; }
-  .detail.on { display: block; }
-  .sec-div { font-family: 'Cinzel', serif; font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--color-text-secondary); margin: 14px 0 8px; padding-bottom: 4px; border-bottom: 0.5px solid var(--color-border); }
-  .cmp-header { display: grid; grid-template-columns: 1fr 60px 65px 60px 60px; gap: 6px; padding: 4px 0 7px; border-bottom: 0.5px solid var(--color-border-secondary); margin-bottom: 2px; }
-  .cmp-header span { font-size: 10px; font-family: 'Cinzel', serif; letter-spacing: .07em; text-transform: uppercase; color: var(--color-text-secondary); text-align: center; }
-  .cmp-header span:first-child { text-align: left; }
-  .cmp-row { display: grid; grid-template-columns: 1fr 60px 65px 60px 60px; gap: 6px; align-items: center; padding: 6px 0; border-bottom: 0.5px solid var(--color-border); font-size: 13px; }
-  .cmp-row:last-child { border-bottom: none; }
-  .cmp-val { text-align: center; font-weight: 500; font-size: 13px; }
-  .cmp-diff { text-align: center; font-size: 12px; font-weight: 500; border-radius: 4px; padding: 1px 5px; }
-  .diff-bad { color: #A32D2D; background: #E24B4A11; }
-  .diff-good { color: #3B6D11; background: #63992211; }
-  .diff-neutral { color: var(--color-text-secondary); }
-  .cmp-name { font-size: 13px; }
-  .cmp-sub { font-size: 11px; color: var(--color-text-secondary); margin-top: 1px; }
-  .sum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; margin-bottom: 12px; }
-  .sum-card { background: var(--color-bg-secondary); border-radius: var(--radius-md); padding: 8px 10px; }
-  .sum-lbl { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 2px; }
-  .sum-val { font-size: 19px; font-weight: 500; }
-  .raid-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
-  .raid-pill { background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: 100px; padding: 5px 14px; font-size: 13px; cursor: pointer; transition: all .15s; font-family: 'Crimson Pro', serif; color: var(--color-text); }
-  .raid-pill:hover { border-color: #B8960C88; }
-  .raid-pill.active { background: #B8960C; color: #fff; border-color: #B8960C; }
-  .boss-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .boss-pill { background: var(--color-bg-secondary); border: 0.5px solid var(--color-border); border-radius: 100px; padding: 4px 12px; font-size: 12px; cursor: pointer; transition: all .15s; font-family: 'Crimson Pro', serif; color: var(--color-text-secondary); }
-  .boss-pill:hover { border-color: #B8960C88; color: var(--color-text); }
-  .boss-pill.active { background: #B8960C22; border-color: #B8960C88; color: #854F0B; }
-  .filter-note { font-size: 11px; color: var(--color-text-secondary); margin-top: 6px; }
-  .ai-block { background: var(--color-bg-secondary); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-top: 10px; font-size: 13.5px; line-height: 1.7; }
-  .ai-label { font-family: 'Cinzel', serif; font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #B8960C; margin-bottom: 6px; }
-  .creds-saved-badge { display: inline-flex; align-items: center; gap: 5px; background: #63992211; border: 0.5px solid #63992244; border-radius: 100px; padding: 3px 10px; font-size: 12px; color: #3B6D11; margin-left: 8px; }
-  .creds-change { font-size: 12px; color: #B8960C; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; margin-left: 10px; }
-  .lock-screen { text-align: center; padding: 3rem 1rem; }
-  .lock-icon { font-size: 40px; margin-bottom: .75rem; color: #888; }
-  .lock-title { font-family: 'Cinzel', serif; font-size: 18px; font-weight: 600; margin-bottom: .4rem; }
-  .lock-sub { font-size: 13.5px; color: var(--color-text-secondary); margin-bottom: 1.5rem; font-style: italic; }
-  .lock-wrap { display: flex; gap: 8px; max-width: 300px; margin: 0 auto; }
-  .shake { animation: shake .3s ease; }
-  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
-  .divider { border: none; border-top: 0.5px solid var(--color-border); margin: 1rem 0; }
-  .wm { text-align: center; font-size: 11px; color: var(--color-text-secondary); margin-top: 2rem; letter-spacing: .05em; }
-  @media(max-width:600px){
-    .cmp-header,.cmp-row{grid-template-columns:1fr 50px 50px 45px 45px;font-size:12px}
-    .guild-name{font-size:18px}
-  }
+:root{--bg:#fff;--bg2:#f5f4f0;--border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.25);--text:#1a1a1a;--text2:#666;--r:8px;--rl:12px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--text);min-height:100vh}
+.container{max-width:820px;margin:0 auto;padding:0 1.5rem 4rem}
+.hdr{border-bottom:0.5px solid var(--border);padding:1.5rem 0 1.25rem;margin-bottom:1.5rem}
+.hdr-inner{display:flex;align-items:center;gap:14px}
+.logo{width:48px;height:48px;background:#B8960C;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.gname{font-family:'Cinzel',serif;font-size:22px;font-weight:700;letter-spacing:.04em}
+.gname span{color:#B8960C}
+.gtag{font-size:13px;color:var(--text2);margin-top:2px;font-style:italic}
+.gmeta{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+.gtg{display:inline-flex;align-items:center;gap:5px;background:var(--bg2);border:0.5px solid var(--border);border-radius:100px;padding:3px 10px;font-size:12px;color:var(--text2)}
+.gtg.gold{background:#B8960C11;border-color:#B8960C44;color:#854F0B}
+.slbl{font-family:'Cinzel',serif;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;display:block}
+.card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--rl);padding:1.25rem;margin-bottom:1rem}
+.card-gold{border-left:3px solid #B8960C;border-radius:0 var(--rl) var(--rl) 0}
+.row{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.fg{display:flex;flex-direction:column;gap:5px;flex:1;min-width:130px}
+label{font-size:11px;color:var(--text2);letter-spacing:.05em;text-transform:uppercase}
+input,select{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--r);padding:9px 12px;font-family:'Crimson Pro',serif;font-size:15px;color:var(--text);outline:none;transition:border-color .15s;width:100%}
+input:focus,select:focus{border-color:#B8960C}
+.btn{background:#B8960C;color:#fff;border:none;border-radius:var(--r);padding:10px 24px;font-family:'Cinzel',serif;font-size:13px;font-weight:600;letter-spacing:.08em;cursor:pointer;transition:opacity .15s,transform .1s;width:100%;margin-top:4px}
+.btn:hover{opacity:.85}.btn:active{transform:scale(.98)}.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-sm{width:auto;margin-top:0;padding:7px 16px;font-size:12px}
+.err{color:#A32D2D;font-size:13px;margin-top:8px;display:none}.err.on{display:block}
+.ok{color:#3B6D11;font-size:13px;margin-top:8px;display:none}.ok.on{display:block}
+.dots{display:none;align-items:center;gap:6px;padding:.75rem 0;color:var(--text2);font-size:14px}.dots.on{display:flex}
+.dot{width:6px;height:6px;border-radius:50%;background:#B8960C;animation:pulse 1.2s ease-in-out infinite}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes pulse{0%,80%,100%{opacity:.2}40%{opacity:1}}
+.hidden{display:none!important}
+.results{display:none;margin-top:1rem}.results.on{display:block}
+.fight{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--rl);padding:.9rem 1.1rem;margin-bottom:8px;cursor:pointer;transition:border-color .15s}
+.fight:hover{border-color:#B8960C88}.fight.open{border-color:#B8960C;background:var(--bg)}
+.fight-hdr{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.fight-name{font-family:'Cinzel',serif;font-size:14px;font-weight:600}
+.fight-meta{font-size:12px;color:var(--text2);margin-top:3px}
+.pbadge{font-size:11px;font-weight:600;font-family:'Cinzel',serif;padding:3px 10px;border-radius:100px;letter-spacing:.04em;white-space:nowrap}
+.pg{background:#B8960C22;color:#B8960C}.pp{background:#7F77DD22;color:#534AB7}
+.pb{background:#378ADD22;color:#185FA5}.pn{background:#63992222;color:#3B6D11}
+.pw{background:var(--bg2);color:var(--text2);border:0.5px solid var(--border)}
+.detail{display:none;margin-top:.75rem;border-top:0.5px solid var(--border);padding-top:.75rem}.detail.on{display:block}
+.sdiv{font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text2);margin:14px 0 8px;padding-bottom:4px;border-bottom:0.5px solid var(--border)}
+.wm{text-align:center;font-size:11px;color:var(--text2);margin-top:2rem;letter-spacing:.05em}
+.chdr{display:grid;grid-template-columns:1fr 60px 65px 60px 60px;gap:6px;padding:4px 0 7px;border-bottom:0.5px solid var(--border2);margin-bottom:2px}
+.chdr span{font-size:10px;font-family:'Cinzel',serif;letter-spacing:.07em;text-transform:uppercase;color:var(--text2);text-align:center}
+.chdr span:first-child{text-align:left}
+.crow{display:grid;grid-template-columns:1fr 60px 65px 60px 60px;gap:6px;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--border);font-size:13px}
+.crow:last-child{border-bottom:none}
+.cv{text-align:center;font-weight:500;font-size:13px}
+.cd{text-align:center;font-size:12px;font-weight:500;border-radius:4px;padding:1px 5px}
+.bad{color:#A32D2D;background:#E24B4A11}.good{color:#3B6D11;background:#63992211}.neu{color:var(--text2)}
+.cn{font-size:13px}.cs{font-size:11px;color:var(--text2);margin-top:1px}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;margin-bottom:12px}
+.sc{background:var(--bg2);border-radius:var(--r);padding:8px 10px}
+.sl2{font-size:11px;color:var(--text2);margin-bottom:2px}
+.sv{font-size:19px;font-weight:500}
+.rpills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
+.rpill{background:var(--bg2);border:0.5px solid var(--border);border-radius:100px;padding:5px 14px;font-size:13px;cursor:pointer;transition:all .15s;font-family:'Crimson Pro',serif;color:var(--text)}
+.rpill:hover{border-color:#B8960C88}.rpill.active{background:#B8960C;color:#fff;border-color:#B8960C}
+.bpills{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.bpill{background:var(--bg2);border:0.5px solid var(--border);border-radius:100px;padding:4px 12px;font-size:12px;cursor:pointer;transition:all .15s;font-family:'Crimson Pro',serif;color:var(--text2)}
+.bpill:hover{border-color:#B8960C88;color:var(--text)}.bpill.active{background:#B8960C22;border-color:#B8960C88;color:#854F0B}
+.fnote{font-size:11px;color:var(--text2);margin-top:6px}
+.csaved{display:inline-flex;align-items:center;gap:5px;background:#63992211;border:0.5px solid #63992244;border-radius:100px;padding:3px 10px;font-size:12px;color:#3B6D11;margin-left:8px}
+.cedit{font-size:12px;color:#B8960C;cursor:pointer;text-decoration:underline;text-underline-offset:3px;margin-left:10px}
+.lock-screen{text-align:center;padding:3rem 1rem}
+.lock-icon{font-size:40px;margin-bottom:.75rem;color:#888}
+.lock-title{font-family:'Cinzel',serif;font-size:18px;font-weight:600;margin-bottom:.4rem}
+.lock-sub{font-size:13.5px;color:var(--text2);margin-bottom:1.5rem;font-style:italic}
+.lock-wrap{display:flex;gap:8px;max-width:300px;margin:0 auto}
+.shake{animation:shake .3s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.divider{border:none;border-top:0.5px solid var(--border);margin:1rem 0}
+.summary-panels{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.panel{border-radius:var(--r);padding:10px 12px}
+.panel-good{background:#63992208;border:0.5px solid #63992244}
+.panel-bad{background:#E24B4A08;border:0.5px solid #E24B4A44}
+.panel-title{font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.panel-title.g{color:#3B6D11}.panel-title.b{color:#A32D2D}
+.panel-item{display:flex;align-items:flex-start;gap:7px;font-size:12.5px;line-height:1.5;margin-bottom:5px}
+.panel-item:last-child{margin-bottom:0}
+.panel-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.panel-dot.g{background:#639922}.panel-dot.b{background:#E24B4A}
+
+/* Tabs */
+.tabs{display:flex;gap:0;border-bottom:0.5px solid var(--border);margin-bottom:1.5rem}
+.tab{font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:.08em;padding:10px 20px;cursor:pointer;color:var(--text2);border-bottom:2px solid transparent;transition:all .15s;text-transform:uppercase}
+.tab:hover{color:var(--text)}
+.tab.active{color:#B8960C;border-bottom-color:#B8960C}
+.tab-content{display:none}.tab-content.active{display:block}
+
+/* Raid overview table */
+.overview-table{width:100%;border-collapse:collapse;font-size:13px}
+.overview-table th{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);padding:6px 8px;border-bottom:0.5px solid var(--border2);text-align:left;font-weight:600}
+.overview-table th:not(:first-child){text-align:center}
+.overview-table td{padding:8px 8px;border-bottom:0.5px solid var(--border);vertical-align:middle}
+.overview-table tr:last-child td{border-bottom:none}
+.overview-table tr{cursor:pointer;transition:background .1s}
+.overview-table tr:hover td{background:var(--bg2)}
+.overview-table tr.expanded td{background:var(--bg2)}
+.player-name{font-weight:500;font-size:13px}
+.player-class{font-size:11px;color:var(--text2);margin-top:1px}
+.player-detail{display:none;padding:10px 8px 4px;border-top:0.5px solid var(--border)}
+.player-detail.on{display:block}
+.issue-list{font-size:12.5px;line-height:1.6}
+.issue-bad{color:#A32D2D}.issue-good{color:#3B6D11}.issue-neu{color:var(--text2)}
+.fight-select{margin-bottom:1rem}
+
+@media(max-width:600px){
+  .chdr,.crow{grid-template-columns:1fr 50px 50px 45px 45px;font-size:12px}
+  .gname{font-size:18px}
+  .summary-panels{grid-template-columns:1fr}
+  .tab{padding:8px 12px;font-size:11px}
+}
 </style>
 </head>
 <body>
 
-<div id="lockScreenOuter" class="container">
+<div id="lockOuter" class="container">
   <div class="hdr">
     <div class="hdr-inner">
       <div class="logo">
-        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
           <rect x="9" y="8" width="10" height="15" rx="2" fill="#fff" opacity="0.95"/>
           <rect x="9" y="8" width="10" height="5" rx="1.5" fill="#fff" opacity="0.6"/>
           <path d="M19 11 Q24 11 24 14.5 Q24 18 19 18" stroke="#fff" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.9"/>
@@ -127,14 +142,14 @@
         </svg>
       </div>
       <div>
-        <div class="guild-name"><span>Uno</span> Mas</div>
-        <div class="guild-tagline">The casual guild that became tryhard</div>
+        <div class="gname"><span>Uno</span> Mas</div>
+        <div class="gtag">The casual guild that became tryhard</div>
       </div>
     </div>
-    <div class="guild-meta">
-      <span class="guild-tag"><i class="ti ti-map-pin"></i> Spineshatter PVP · EU</span>
-      <span class="guild-tag"><i class="ti ti-sword"></i> TBC Classic</span>
-      <span class="guild-tag gold"><i class="ti ti-chart-bar"></i> Raid Performance Analyzer</span>
+    <div class="gmeta">
+      <span class="gtg"><i class="ti ti-map-pin"></i> Spineshatter PVP · EU</span>
+      <span class="gtg"><i class="ti ti-sword"></i> TBC Classic</span>
+      <span class="gtg gold"><i class="ti ti-chart-bar"></i> Raid Performance Analyzer</span>
     </div>
   </div>
   <div class="lock-screen">
@@ -145,7 +160,7 @@
       <input type="password" id="pwInput" placeholder="Password" onkeydown="if(event.key==='Enter')checkPw()" style="flex:1">
       <button class="btn" onclick="checkPw()" style="width:auto;margin-top:0">Enter</button>
     </div>
-    <div class="errmsg" id="pwErr" style="text-align:center;margin-top:10px">Incorrect password. Try again.</div>
+    <div class="err" id="pwErr" style="text-align:center;margin-top:10px">Incorrect password. Try again.</div>
   </div>
 </div>
 
@@ -153,7 +168,7 @@
   <div class="hdr">
     <div class="hdr-inner">
       <div class="logo">
-        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
           <rect x="9" y="8" width="10" height="15" rx="2" fill="#fff" opacity="0.95"/>
           <rect x="9" y="8" width="10" height="5" rx="1.5" fill="#fff" opacity="0.6"/>
           <path d="M19 11 Q24 11 24 14.5 Q24 18 19 18" stroke="#fff" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.9"/>
@@ -164,24 +179,25 @@
         </svg>
       </div>
       <div>
-        <div class="guild-name"><span>Uno</span> Mas</div>
-        <div class="guild-tagline">The casual guild that became tryhard</div>
+        <div class="gname"><span>Uno</span> Mas</div>
+        <div class="gtag">The casual guild that became tryhard</div>
       </div>
     </div>
-    <div class="guild-meta">
-      <span class="guild-tag"><i class="ti ti-map-pin"></i> Spineshatter PVP · EU</span>
-      <span class="guild-tag"><i class="ti ti-sword"></i> TBC Classic</span>
-      <span class="guild-tag gold"><i class="ti ti-chart-bar"></i> Raid Performance Analyzer</span>
+    <div class="gmeta">
+      <span class="gtg"><i class="ti ti-map-pin"></i> Spineshatter PVP · EU</span>
+      <span class="gtg"><i class="ti ti-sword"></i> TBC Classic</span>
+      <span class="gtg gold"><i class="ti ti-chart-bar"></i> Raid Performance Analyzer</span>
     </div>
   </div>
 
+  <!-- Credentials -->
   <div class="card">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
       <div>
-        <span class="sec-label" style="margin-bottom:0;display:inline">API credentials</span>
-        <span class="creds-saved-badge hidden" id="savedBadge"><i class="ti ti-check" style="font-size:12px"></i> Saved</span>
+        <span class="slbl" style="margin-bottom:0;display:inline">API credentials</span>
+        <span class="csaved hidden" id="savedBadge"><i class="ti ti-check" style="font-size:12px"></i> Saved</span>
       </div>
-      <span class="creds-change hidden" id="credsChangeBtn" onclick="toggleCredsEdit()">Edit credentials</span>
+      <span class="cedit hidden" id="credsChangeBtn" onclick="toggleCredsEdit()">Edit credentials</span>
     </div>
     <div id="credsFields" style="margin-top:12px">
       <div class="row">
@@ -191,34 +207,65 @@
       <div class="fg" style="margin-bottom:10px"><label>Anthropic API Key</label><input type="password" id="anthropicKey" placeholder="sk-ant-..." autocomplete="off"></div>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
         <button class="btn btn-sm" onclick="saveCredentials()">Save credentials</button>
-        <span style="font-size:12px;color:var(--color-text-secondary)">Saved to your browser only.</span>
+        <span style="font-size:12px;color:var(--text2)">Saved to your browser only.</span>
       </div>
-      <div class="errmsg" id="credsErr"></div>
-      <div class="successmsg" id="credsSuccess">Credentials saved!</div>
+      <div class="err" id="credsErr"></div>
+      <div class="ok" id="credsOk">Credentials saved!</div>
     </div>
   </div>
 
-  <div class="card card-gold">
-    <span class="sec-label">Your character</span>
-    <div class="row">
-      <div class="fg"><label>Character name</label><input type="text" id="charName" placeholder="e.g. Thrallmaster"></div>
-    </div>
-    <span class="sec-label" style="margin-top:8px">Raid tier</span>
-    <div class="raid-pills" id="raidPills"></div>
-    <div id="bossPillsWrap" style="display:none">
-      <span class="sec-label" style="margin-top:10px">Boss filter <span style="font-size:10px;font-weight:400;text-transform:none;letter-spacing:0">(all selected by default)</span></span>
-      <div class="boss-pills" id="bossPills"></div>
-    </div>
-    <div class="filter-note" id="filterNote">Select a raid tier above, then click Analyze.</div>
-    <div class="errmsg" id="errMsg"></div>
-    <button class="btn" id="goBtn" onclick="startAnalysis()" style="margin-top:12px">Analyze my performance</button>
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('player')"><i class="ti ti-user" style="font-size:13px;margin-right:5px"></i>Player</div>
+    <div class="tab" onclick="switchTab('raidleader')"><i class="ti ti-shield" style="font-size:13px;margin-right:5px"></i>Raid Leader</div>
   </div>
 
-  <div class="dots" id="loadDots"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span id="loadTxt">Connecting...</span></div>
+  <!-- Player Tab -->
+  <div class="tab-content active" id="tab-player">
+    <div class="card card-gold">
+      <span class="slbl">Your character</span>
+      <div class="row">
+        <div class="fg"><label>Character name</label><input type="text" id="charName" placeholder="e.g. Doohando"></div>
+      </div>
+      <span class="slbl" style="margin-top:8px">Raid tier</span>
+      <div class="rpills" id="raidPills"></div>
+      <div id="bossPillsWrap" style="display:none">
+        <span class="slbl" style="margin-top:10px">Boss filter <span style="font-size:10px;font-weight:400;text-transform:none;letter-spacing:0">(all selected by default)</span></span>
+        <div class="bpills" id="bossPills"></div>
+      </div>
+      <div class="fnote" id="filterNote">Select a raid tier above, then click Analyze.</div>
+      <div class="err" id="errMsg"></div>
+      <button class="btn" id="goBtn" onclick="startAnalysis()" style="margin-top:12px">Analyze my performance</button>
+    </div>
+    <div class="dots" id="loadDots"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span id="loadTxt">Connecting...</span></div>
+    <div class="results" id="results">
+      <span class="slbl" id="resultsLabel">Kills — click a fight to compare</span>
+      <div id="fightList"></div>
+    </div>
+  </div>
 
-  <div class="results" id="results">
-    <span class="sec-label" id="resultsLabel">Kills — click a fight to compare</span>
-    <div id="fightList"></div>
+  <!-- Raid Leader Tab -->
+  <div class="tab-content" id="tab-raidleader">
+    <div class="card card-gold">
+      <span class="slbl">Raid overview</span>
+      <div class="row">
+        <div class="fg">
+          <label>WarcraftLogs report code</label>
+          <input type="text" id="reportCode" placeholder="e.g. a1b2c3d4XYZ">
+          <span style="font-size:11px;color:var(--text2);margin-top:4px">Find the code in your WarcraftLogs URL: fresh.warcraftlogs.com/reports/<strong>CODE</strong></span>
+        </div>
+      </div>
+      <div class="err" id="rlErrMsg"></div>
+      <button class="btn" id="rlGoBtn" onclick="loadReport()" style="margin-top:8px">Load report</button>
+    </div>
+    <div class="dots" id="rlLoadDots"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span id="rlLoadTxt">Loading report...</span></div>
+    <div id="rlResults" style="display:none">
+      <div class="fight-select">
+        <span class="slbl">Select a fight</span>
+        <div class="bpills" id="fightSelectPills"></div>
+      </div>
+      <div id="overviewTable"></div>
+    </div>
   </div>
 
   <hr class="divider">
@@ -226,15 +273,27 @@
 </div>
 
 <script>
-const DEFAULT_SERVER='spineshatter',DEFAULT_REGION='eu';
+const SRV='spineshatter',REG='eu';
+const WL_TOKEN='https://fresh.warcraftlogs.com/oauth/token';
+const WL_API='https://fresh.warcraftlogs.com/api/v2/client';
 const PROXY='/.netlify/functions/warcraftlogs';
 const AI_PROXY='/.netlify/functions/anthropic';
-let token=null,selectedRaid=null,selectedBosses=new Set(),credsEditing=true;
+let token=null,selRaid=null,selBosses=new Set(),credsEditing=true;
+let rlFights=[],selRlFight=null,rlReportCode=null;
+
+const CLASS_NAMES={1:'Warrior',2:'Paladin',3:'Hunter',4:'Rogue',5:'Priest',7:'Shaman',8:'Mage',9:'Warlock',10:'Druid'};
+
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+}
 
 function checkPw(){
-  const val=document.getElementById('pwInput').value.trim().toLowerCase();
-  if(val==='uno mas'){
-    document.getElementById('lockScreenOuter').classList.add('hidden');
+  const v=document.getElementById('pwInput').value.trim().toLowerCase();
+  if(v==='uno mas'){
+    document.getElementById('lockOuter').classList.add('hidden');
     document.getElementById('mainApp').classList.remove('hidden');
     loadSavedCreds();
   } else {
@@ -247,9 +306,9 @@ function checkPw(){
 
 function loadSavedCreds(){
   try{
-    const saved=localStorage.getItem('unomasCredentials');
-    if(saved){
-      const c=JSON.parse(saved);
+    const s=localStorage.getItem('unomasCreds');
+    if(s){
+      const c=JSON.parse(s);
       if(c.wlId)document.getElementById('wlId').value=c.wlId;
       if(c.wlSec)document.getElementById('wlSec').value=c.wlSec;
       if(c.anthropicKey)document.getElementById('anthropicKey').value=c.anthropicKey;
@@ -261,11 +320,11 @@ function loadSavedCreds(){
 function saveCredentials(){
   const wlId=document.getElementById('wlId').value.trim();
   const wlSec=document.getElementById('wlSec').value.trim();
-  const anthropicKey=document.getElementById('anthropicKey').value.trim();
+  const ak=document.getElementById('anthropicKey').value.trim();
   const ce=document.getElementById('credsErr');ce.classList.remove('on');
-  if(!wlId||!wlSec){ce.textContent='Please enter at least your WarcraftLogs Client ID and Secret.';ce.classList.add('on');return;}
-  localStorage.setItem('unomasCredentials',JSON.stringify({wlId,wlSec,anthropicKey}));
-  document.getElementById('credsSuccess').classList.add('on');
+  if(!wlId||!wlSec){ce.textContent='Please enter your WarcraftLogs credentials.';ce.classList.add('on');return;}
+  localStorage.setItem('unomasCreds',JSON.stringify({wlId,wlSec,anthropicKey:ak}));
+  document.getElementById('credsOk').classList.add('on');
   setTimeout(()=>showCredsSaved(),1200);
 }
 
@@ -283,15 +342,31 @@ function toggleCredsEdit(){
     document.getElementById('credsFields').classList.remove('hidden');
     document.getElementById('savedBadge').classList.add('hidden');
     document.getElementById('credsChangeBtn').textContent='Hide';
-    document.getElementById('credsSuccess').classList.remove('on');
+    document.getElementById('credsOk').classList.remove('on');
     credsEditing=true;
   }
 }
 
-async function proxyFetch(url, options){
+async function proxyFetch(url,options){
   const r=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url,options})});
   if(!r.ok)throw new Error('Proxy error '+r.status);
-  return r.json();
+  const text=await r.text();
+  try{return JSON.parse(text);}catch(e){throw new Error('Invalid response: '+text.slice(0,100));}
+}
+
+async function ensureToken(){
+  if(token)return;
+  const clientId=document.getElementById('wlId').value.trim();
+  const secret=document.getElementById('wlSec').value.trim();
+  if(!clientId||!secret)throw new Error('Please enter your WarcraftLogs credentials above.');
+  const data=await proxyFetch(WL_TOKEN,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:`grant_type=client_credentials&client_id=${encodeURIComponent(clientId)}&client_secret=${encodeURIComponent(secret)}`});
+  if(!data.access_token)throw new Error('Authentication failed. Check your Client ID and Secret.');
+  token=data.access_token;
+}
+
+async function gql(query,vars){
+  await ensureToken();
+  return proxyFetch(WL_API,{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({query,variables:vars})});
 }
 
 const RAIDS={
@@ -324,110 +399,147 @@ const UPTIME_BUFFS=[
   {id:14325,name:"Hunter's Mark",cat:'Debuff Uptime'},{id:26993,name:'Faerie Fire',cat:'Debuff Uptime'},{id:33876,name:'Mangle',cat:'Debuff Uptime'},{id:27228,name:'Curse of Elements',cat:'Debuff Uptime'},{id:15258,name:'Shadow Weaving',cat:'Debuff Uptime'},{id:34914,name:'Vampiric Touch',cat:'Debuff Uptime'},
 ];
 
-function showErr(m){const e=document.getElementById('errMsg');e.textContent=m;e.classList.add('on')}
-function clearErr(){document.getElementById('errMsg').classList.remove('on')}
-function setLoading(on,txt){
-  const d=document.getElementById('loadDots');
-  if(on){d.classList.add('on');document.getElementById('loadTxt').textContent=txt||'Loading...';document.getElementById('goBtn').disabled=true}
-  else{d.classList.remove('on');document.getElementById('goBtn').disabled=false}
+function showErr(id,m){const e=document.getElementById(id);e.textContent=m;e.classList.add('on')}
+function clearErr(id){document.getElementById(id).classList.remove('on')}
+function setLoading(dotsId,txtId,btnId,on,txt){
+  const d=document.getElementById(dotsId);
+  if(on){d.classList.add('on');document.getElementById(txtId).textContent=txt||'Loading...';if(btnId)document.getElementById(btnId).disabled=true}
+  else{d.classList.remove('on');if(btnId)document.getElementById(btnId).disabled=false}
 }
 
-async function getToken(id,sec){
-  const data=await proxyFetch('https://fresh.warcraftlogs.com/oauth/token',{
-    method:'POST',
-    headers:{'Content-Type':'application/x-www-form-urlencoded'},
-    body:`grant_type=client_credentials&client_id=${encodeURIComponent(id)}&client_secret=${encodeURIComponent(sec)}`
-  });
-  if(!data.access_token)throw new Error('Authentication failed. Check your Client ID and Secret.');
-  return data.access_token;
-}
-
-async function gql(query,vars){
-  return proxyFetch('https://fresh.warcraftlogs.com/api/v2/client',{
-    method:'POST',
-    headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
-    body:JSON.stringify({query,variables:vars})
-  });
-}
-
-function buildRaidPills(){
-  const c=document.getElementById('raidPills');
-  Object.keys(RAIDS).forEach(name=>{
-    const p=document.createElement('button');p.className='raid-pill';p.textContent=name;
-    p.onclick=()=>selectRaid(name,p);c.appendChild(p);
-  });
-}
-function selectRaid(name,el){
-  selectedRaid=name;selectedBosses=new Set();
-  document.querySelectorAll('.raid-pill').forEach(p=>p.classList.remove('active'));
-  el.classList.add('active');
-  const raid=RAIDS[name];
-  const wrap=document.getElementById('bossPillsWrap'),bc=document.getElementById('bossPills');
-  bc.innerHTML='';wrap.style.display='block';
-  raid.encounters.forEach(enc=>{
-    const p=document.createElement('button');p.className='boss-pill active';p.textContent=enc.name;
-    p.onclick=()=>toggleBoss(enc.id,p);selectedBosses.add(enc.id);bc.appendChild(p);
-  });
-  document.getElementById('filterNote').textContent=`Showing all ${raid.encounters.length} bosses in ${name}. Click to filter.`;
-}
-function toggleBoss(id,el){
-  if(selectedBosses.has(id)){if(selectedBosses.size===1)return;selectedBosses.delete(id);el.classList.remove('active');}
-  else{selectedBosses.add(id);el.classList.add('active');}
-  document.getElementById('filterNote').textContent=`Showing ${selectedBosses.size} boss${selectedBosses.size!==1?'es':''} in ${selectedRaid}.`;
-}
 function parseBadge(p){
-  if(p===null)return{cls:'pw',label:'No parse'};
+  if(p===null)return{cls:'pw',label:'—'};
   const v=Math.round(p);
   if(v>=95)return{cls:'pg',label:'Gold '+v};if(v>=75)return{cls:'pp',label:'Purple '+v};
   if(v>=50)return{cls:'pb',label:'Blue '+v};if(v>=25)return{cls:'pn',label:'Green '+v};
   return{cls:'pw',label:'Gray '+v};
 }
+
 function fmtDiff(mine,compare){
-  if(mine===null||compare===null||compare===undefined)return{text:'—',cls:'diff-neutral'};
+  if(mine===null||compare===null||compare===undefined)return{text:'—',cls:'neu'};
   const diff=parseFloat((mine-compare).toFixed(1));
-  if(Math.abs(diff)<0.05)return{text:'same',cls:'diff-neutral'};
-  return{text:(diff>0?'+':'')+diff,cls:diff>0?'diff-good':'diff-bad'};
+  if(Math.abs(diff)<0.05)return{text:'same',cls:'neu'};
+  return{text:(diff>0?'+':'')+diff,cls:diff>0?'good':'bad'};
 }
 function fmtPctDiff(mine,compare){
-  if(mine===null||compare===null||compare===undefined)return{text:'—',cls:'diff-neutral'};
+  if(mine===null||compare===null||compare===undefined)return{text:'—',cls:'neu'};
   const diff=Math.round(mine-compare);
-  if(diff===0)return{text:'same',cls:'diff-neutral'};
-  return{text:(diff>0?'+':'')+diff+'%',cls:diff>0?'diff-good':'diff-bad'};
+  if(diff===0)return{text:'same',cls:'neu'};
+  return{text:(diff>0?'+':'')+diff+'%',cls:diff>0?'good':'bad'};
 }
 
+function buildRaidPills(){
+  const c=document.getElementById('raidPills');
+  Object.keys(RAIDS).forEach(name=>{
+    const p=document.createElement('button');p.className='rpill';p.textContent=name;
+    p.onclick=()=>selectRaid(name,p);c.appendChild(p);
+  });
+}
+function selectRaid(name,el){
+  selRaid=name;selBosses=new Set();
+  document.querySelectorAll('.rpill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  const raid=RAIDS[name];
+  const wrap=document.getElementById('bossPillsWrap'),bc=document.getElementById('bossPills');
+  bc.innerHTML='';wrap.style.display='block';
+  raid.encounters.forEach(enc=>{
+    const p=document.createElement('button');p.className='bpill active';p.textContent=enc.name;
+    p.onclick=()=>toggleBoss(enc.id,p);selBosses.add(enc.id);bc.appendChild(p);
+  });
+  document.getElementById('filterNote').textContent=`Showing all ${raid.encounters.length} bosses in ${name}. Click to filter.`;
+}
+function toggleBoss(id,el){
+  if(selBosses.has(id)){if(selBosses.size===1)return;selBosses.delete(id);el.classList.remove('active');}
+  else{selBosses.add(id);el.classList.add('active');}
+  document.getElementById('filterNote').textContent=`Showing ${selBosses.size} boss${selBosses.size!==1?'es':''} in ${selRaid}.`;
+}
+
+function extractBuffs(buffEvents,castEvents,fStart,fEnd){
+  const r={};
+  ALL_BUFFS.forEach(b=>{
+    const applies=buffEvents.filter(e=>(e.type==='applybuff'||e.type==='refreshbuff')&&e.ability?.guid===b.id);
+    const casts=castEvents.filter(e=>e.type==='cast'&&e.ability?.guid===b.id);
+    r[b.id]={present:applies.length>0||casts.length>0,count:Math.max(applies.length,casts.length),name:b.name,cat:b.cat};
+  });
+  UPTIME_BUFFS.forEach(b=>{
+    const relevant=buffEvents.filter(e=>e.ability?.guid===b.id);
+    let uptime=null;
+    if(relevant.length){
+      const applies=relevant.filter(e=>e.type==='applybuff'||e.type==='refreshbuff');
+      const removes=relevant.filter(e=>e.type==='removebuff');
+      if(applies.length){
+        let covered=0,activeStart=null;
+        const evs=[...applies.map(e=>({t:e.timestamp,type:'a'})),...removes.map(e=>({t:e.timestamp,type:'r'}))].sort((a,b)=>a.t-b.t);
+        for(const ev of evs){
+          if(ev.type==='a'&&activeStart===null)activeStart=Math.max(ev.t,fStart);
+          else if(ev.type==='r'&&activeStart!==null){covered+=Math.max(0,ev.t-activeStart);activeStart=null;}
+        }
+        if(activeStart!==null)covered+=Math.max(0,fEnd-activeStart);
+        const total=fEnd-fStart;uptime=total>0?Math.min(100,Math.round((covered/total)*100)):null;
+      }
+    }
+    r['u_'+b.id]={uptime,name:b.name,cat:b.cat,isUptime:true};
+  });
+  return r;
+}
+
+function buildTop3(myBuffs,topParseBuffs,myOutput,topOutput,myParse,myDeaths){
+  const good=[],bad=[];
+  const pct=myParse!==null?Math.round(myParse):null;
+  if(pct!==null&&pct>=75)good.push(`Parse is ${pct}% — strong performance`);
+  if(myOutput&&topOutput){
+    const ratio=Math.round((myOutput/topOutput)*100);
+    if(ratio>=90)good.push(`Output ${(myOutput/1000).toFixed(1)}k — ${ratio}% of top same-spec player`);
+    else bad.push(`Output ${(myOutput/1000).toFixed(1)}k vs top same-spec ${(topOutput/1000).toFixed(1)}k (${ratio}%)`);
+  }
+  if(myDeaths===0)good.push('Zero deaths — stayed alive the whole fight');
+  else bad.push(`Died ${myDeaths} time${myDeaths>1?'s':''} — each death is a significant loss`);
+  ALL_BUFFS.forEach(b=>{
+    const mine=myBuffs[b.id];const topData=topParseBuffs?.[b.id];
+    if(!mine||!topData)return;
+    if(mine.present&&topData.pct>=80)good.push(`Used ${b.name} — ${topData.pct}% of top parses use it`);
+    if(!mine.present&&topData.pct>=70)bad.push(`Missing ${b.name} — ${topData.pct}% of top parses use it`);
+  });
+  UPTIME_BUFFS.forEach(b=>{
+    const u=myBuffs['u_'+b.id]?.uptime;
+    if(u===null||u===undefined)return;
+    if(u>=95)good.push(`${b.name} uptime ${u}% — excellent`);
+    else if(u<80)bad.push(`${b.name} uptime only ${u}% — should be 95%+`);
+  });
+  if(pct!==null&&pct<50)bad.push(`Parse is ${pct}% — significant room for improvement`);
+  return{good:good.slice(0,3),bad:bad.slice(0,3)};
+}
+
+// =================== PLAYER TAB ===================
+
 async function startAnalysis(){
-  clearErr();
-  if(!selectedRaid)return showErr('Please select a raid tier first.');
+  clearErr('errMsg');
+  if(!selRaid)return showErr('errMsg','Please select a raid tier first.');
   const name=document.getElementById('charName').value.trim();
-  const clientId=document.getElementById('wlId').value.trim();
-  const secret=document.getElementById('wlSec').value.trim();
-  if(!name)return showErr('Please enter your character name.');
-  if(!clientId||!secret)return showErr('Please enter your WarcraftLogs credentials above.');
+  if(!name)return showErr('errMsg','Please enter your character name.');
   try{
-    setLoading(true,'Authenticating with WarcraftLogs...');
-    token=await getToken(clientId,secret);
-    setLoading(true,`Fetching ${selectedRaid} logs for ${name}...`);
+    setLoading('loadDots','loadTxt','goBtn',true,'Authenticating...');
     const q=`query($name:String!,$server:String!,$region:String!){characterData{character(name:$name,serverSlug:$server,serverRegion:$region){name classID recentReports(limit:25){data{code title fights(killType:Kills){id name kill startTime endTime averageItemLevel encounterID}}}}}}`;
-    const res=await gql(q,{name,server:DEFAULT_SERVER,region:DEFAULT_REGION});
+    const res=await gql(q,{name,server:SRV,region:REG});
     const char=res?.data?.characterData?.character;
-    if(!char)throw new Error(`Character "${name}" not found on Spineshatter EU. Check spelling.`);
+    if(!char)throw new Error(`Character "${name}" not found on Spineshatter EU.`);
     const bossNameMap={};
-    RAIDS[selectedRaid].encounters.forEach(e=>bossNameMap[e.name.toLowerCase()]=e.id);
+    RAIDS[selRaid].encounters.forEach(e=>bossNameMap[e.name.toLowerCase()]=e.id);
     const fights=[];
     (char.recentReports?.data||[]).forEach(rep=>{
       (rep.fights||[]).filter(f=>f.kill).forEach(f=>{
         const encId=f.encounterID||(bossNameMap[f.name?.toLowerCase()]);
-        const inFilter=!selectedBosses.size||selectedBosses.has(encId)||[...selectedBosses].some(id=>{const enc=RAIDS[selectedRaid].encounters.find(e=>e.id===id);return enc&&f.name&&f.name.toLowerCase().includes(enc.name.toLowerCase().split(' ')[0].toLowerCase());});
+        const inFilter=!selBosses.size||selBosses.has(encId)||[...selBosses].some(id=>{const enc=RAIDS[selRaid].encounters.find(e=>e.id===id);return enc&&f.name&&f.name.toLowerCase().includes(enc.name.toLowerCase().split(' ')[0].toLowerCase());});
         if(!inFilter)return;
         fights.push({...f,reportCode:rep.code,reportTitle:rep.title,charName:char.name,classId:char.classID,encounterId:encId});
       });
     });
-    if(!fights.length)throw new Error(`No ${selectedRaid} kills found for ${name} on Spineshatter EU. Make sure your logs are public.`);
-    setLoading(false);
-    document.getElementById('resultsLabel').textContent=`${selectedRaid} kills for ${name} · Uno Mas · Spineshatter EU`;
+    if(!fights.length)throw new Error(`No ${selRaid} kills found. Make sure your logs are public.`);
+    setLoading('loadDots','loadTxt','goBtn',false);
+    document.getElementById('resultsLabel').textContent=`${selRaid} kills for ${name} · Uno Mas`;
     renderFights(fights.slice(0,20));
     document.getElementById('results').classList.add('on');
-  }catch(e){setLoading(false);showErr(e.message||'Something went wrong.');}
+  }catch(e){setLoading('loadDots','loadTxt','goBtn',false);showErr('errMsg',e.message||'Something went wrong.');}
 }
 
 function renderFights(fights){
@@ -459,51 +571,39 @@ async function toggleFight(i,fight){
 
 function setFLT(i,txt){const el=document.querySelector('#det'+i+' .flt');if(el)el.textContent=txt;}
 
-function extractBuffs(buffEvents,castEvents,fStart,fEnd){
-  const r={};
-  ALL_BUFFS.forEach(b=>{
-    const applies=buffEvents.filter(e=>(e.type==='applybuff'||e.type==='refreshbuff')&&e.ability?.guid===b.id);
-    const casts=castEvents.filter(e=>e.type==='cast'&&e.ability?.guid===b.id);
-    r[b.id]={present:applies.length>0||casts.length>0,count:Math.max(applies.length,casts.length),name:b.name,cat:b.cat};
-  });
-  UPTIME_BUFFS.forEach(b=>{
-    const relevant=buffEvents.filter(e=>e.ability?.guid===b.id);
-    let uptime=null;
-    if(relevant.length){
-      const applies=relevant.filter(e=>e.type==='applybuff'||e.type==='refreshbuff');
-      const removes=relevant.filter(e=>e.type==='removebuff');
-      if(applies.length){
-        let covered=0,activeStart=null;
-        const evs=[...applies.map(e=>({t:e.timestamp,type:'a'})),...removes.map(e=>({t:e.timestamp,type:'r'}))].sort((a,b)=>a.t-b.t);
-        for(const ev of evs){
-          if(ev.type==='a'&&activeStart===null)activeStart=Math.max(ev.t,fStart);
-          else if(ev.type==='r'&&activeStart!==null){covered+=Math.max(0,ev.t-activeStart);activeStart=null;}
-        }
-        if(activeStart!==null)covered+=Math.max(0,fEnd-activeStart);
-        const total=fEnd-fStart;uptime=total>0?Math.min(100,Math.round((covered/total)*100)):null;
-      }
-    }
-    r['u_'+b.id]={uptime,name:b.name,cat:b.cat,isUptime:true};
-  });
-  return r;
-}
-
 async function loadComparison(i,fight){
   const{reportCode,id:fightId,charName,classId,startTime:fStart,endTime:fEnd,name:bossName,encounterId}=fight;
-  setFLT(i,'Fetching your fight data...');
+  setFLT(i,'Fetching fight data...');
   const q=`query($code:String!,$fid:Int!){reportData{report(code:$code){table(fightIDs:[$fid],dataType:DamageDone) rankings(playerMetric:dps,compare:Parses) casts:events(fightIDs:[$fid],dataType:Casts,limit:10000){data} buffs:events(fightIDs:[$fid],dataType:Buffs,limit:10000){data} deaths:events(fightIDs:[$fid],dataType:Deaths,limit:50){data}}}}`;
   const res=await gql(q,{code:reportCode,fid:fightId});
   const rep=res?.data?.reportData?.report;
-  let myOutput=null,topOutput=null,myParse=null,mySpec=null,allPlayers=[];
-  try{const tbl=typeof rep?.table==='string'?JSON.parse(rep.table):rep?.table;allPlayers=tbl?.data?.entries||[];const me=allPlayers.find(e=>e.name?.toLowerCase()===charName.toLowerCase());if(me)myOutput=me.total;if(allPlayers.length)topOutput=Math.max(...allPlayers.map(e=>e.total||0));}catch(e){}
-  try{const rnk=typeof rep?.rankings==='string'?JSON.parse(rep.rankings):rep?.rankings;const me=(rnk?.data||[]).find(r=>r.name?.toLowerCase()===charName.toLowerCase());if(me){myParse=me.rankPercent;mySpec=me.spec;}}catch(e){}
+  let myOutput=null,topSameSpecOutput=null,myParse=null,mySpec=null,allPlayers=[];
+  try{
+    const tbl=typeof rep?.table==='string'?JSON.parse(rep.table):rep?.table;
+    allPlayers=tbl?.data?.entries||[];
+    const me=allPlayers.find(e=>e.name?.toLowerCase()===charName.toLowerCase());
+    if(me)myOutput=me.total;
+  }catch(e){}
+  try{
+    const rnk=typeof rep?.rankings==='string'?JSON.parse(rep.rankings):rep?.rankings;
+    const rankings=rnk?.data||[];
+    const me=rankings.find(r=>r.name?.toLowerCase()===charName.toLowerCase());
+    if(me){myParse=me.rankPercent;mySpec=me.spec;}
+    // Top same spec in raid
+    const sameSpec=rankings.filter(r=>r.spec===mySpec&&r.name?.toLowerCase()!==charName.toLowerCase());
+    if(sameSpec.length)topSameSpecOutput=Math.max(...sameSpec.map(r=>r.amount||0));
+    else{
+      // fallback: same class
+      const sameClass=allPlayers.filter(p=>p.name?.toLowerCase()!==charName.toLowerCase()&&p.type===classId);
+      if(sameClass.length)topSameSpecOutput=Math.max(...sameClass.map(p=>p.total||0));
+    }
+  }catch(e){}
   const castEvents=rep?.casts?.data||[],buffEvents=rep?.buffs?.data||[];
   const myDeaths=(rep?.deaths?.data||[]).length;
   const myBuffs=extractBuffs(buffEvents,castEvents,fStart,fEnd);
   const badge=document.getElementById('pb'+i);
   if(myParse!==null){const{cls,label}=parseBadge(myParse);badge.className='pbadge '+cls;badge.textContent=label;}
-  const sameClass=allPlayers.filter(p=>p.name?.toLowerCase()!==charName.toLowerCase()&&p.type===classId);
-  const guildBuffsList=sameClass.slice(0,4).map(gp=>({name:gp.name,output:gp.total,buffs:extractBuffs(buffEvents,castEvents,fStart,fEnd)}));
+
   setFLT(i,'Fetching top parse data...');
   let topParseBuffs=null;
   try{
@@ -518,6 +618,7 @@ async function loadComparison(i,fight){
       }
     }
   }catch(e){}
+
   const anthropicKey=document.getElementById('anthropicKey').value.trim();
   let aiSummary=null;
   if(anthropicKey){
@@ -525,66 +626,239 @@ async function loadComparison(i,fight){
     try{
       const missingBuffs=ALL_BUFFS.filter(b=>!myBuffs[b.id]?.present&&topParseBuffs?.[b.id]?.pct>50).map(b=>`${b.name} (${topParseBuffs[b.id].pct}% of top parses)`);
       const lowUptime=UPTIME_BUFFS.filter(b=>{const u=myBuffs['u_'+b.id]?.uptime;return u!==null&&u!==undefined&&u<90;}).map(b=>`${b.name}: ${myBuffs['u_'+b.id].uptime}%`);
-      const payload={model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:`TBC Classic raid analyst for Uno Mas guild (Spineshatter EU). Data for ${charName} on ${bossName}.
-Parse: ${myParse!==null?Math.round(myParse)+'%':'unknown'} | Output: ${myOutput?(myOutput/1000).toFixed(1)+'k':'?'} | Top: ${topOutput?(topOutput/1000).toFixed(1)+'k':'?'} | Spec: ${mySpec||'?'} | Deaths: ${myDeaths}
+      const payload={model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:`TBC Classic raid analyst for Uno Mas (Spineshatter EU). ${charName} on ${bossName}.
+Parse: ${myParse!==null?Math.round(myParse)+'%':'?'} | Output: ${myOutput?(myOutput/1000).toFixed(1)+'k':'?'} | Top same spec: ${topSameSpecOutput?(topSameSpecOutput/1000).toFixed(1)+'k':'?'} | Spec: ${mySpec||'?'} | Deaths: ${myDeaths}
 Missing buffs vs top parses (>50%): ${missingBuffs.length?missingBuffs.join(', '):'none'}
 Low uptime (<90%): ${lowUptime.length?lowUptime.join(', '):'none'}
-Write 3-5 bullet points. Each must be a SPECIFIC DATA STATEMENT with exact numbers only. No generic advice. Only data comparisons with numbers. Start each with "- ".`}]};
+Write 3-5 bullet points. SPECIFIC DATA with exact numbers only. Format: "- You used X. Top parses average Y." No generic advice. Start each with "- ".`}]};
       const aiResp=await fetch(AI_PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({apiKey:anthropicKey,payload})});
       if(aiResp.ok){const d=await aiResp.json();aiSummary=d.content?.map(c=>c.text||'').join('');}
     }catch(e){}
   }
-  renderFull(i,{charName,myOutput,topOutput,myParse,mySpec,myBuffs,myDeaths,guildBuffsList,topParseBuffs,aiSummary,bossName});
+
+  renderFull(i,{charName,myOutput,topSameSpecOutput,myParse,mySpec,myBuffs,myDeaths,topParseBuffs,aiSummary,bossName});
 }
 
 function renderFull(i,data){
-  const{charName,myOutput,topOutput,myParse,mySpec,myBuffs,myDeaths,guildBuffsList,topParseBuffs,aiSummary,bossName}=data;
+  const{charName,myOutput,topSameSpecOutput,myParse,mySpec,myBuffs,myDeaths,topParseBuffs,aiSummary,bossName}=data;
   const det=document.getElementById('det'+i);
   const pct=myParse!==null?Math.round(myParse):null;
-  const hasGuild=guildBuffsList.length>0;
+
   const sumCards=[
-    myOutput?`<div class="sum-card"><div class="sum-lbl">Your output</div><div class="sum-val">${(myOutput/1000).toFixed(1)}k</div></div>`:'',
-    topOutput?`<div class="sum-card"><div class="sum-lbl">Top in raid</div><div class="sum-val">${(topOutput/1000).toFixed(1)}k</div></div>`:'',
-    pct!==null?`<div class="sum-card"><div class="sum-lbl">Parse</div><div class="sum-val" style="color:${pct>=75?'#3B6D11':pct>=50?'#854F0B':'#A32D2D'}">${pct}%</div></div>`:'',
-    myDeaths?`<div class="sum-card"><div class="sum-lbl">Deaths</div><div class="sum-val" style="color:#A32D2D">${myDeaths}</div></div>`:'',
-    mySpec?`<div class="sum-card"><div class="sum-lbl">Spec</div><div class="sum-val" style="font-size:13px">${mySpec}</div></div>`:'',
+    myOutput?`<div class="sc"><div class="sl2">Your output</div><div class="sv">${(myOutput/1000).toFixed(1)}k</div></div>`:'',
+    topSameSpecOutput?`<div class="sc"><div class="sl2">Top same spec</div><div class="sv">${(topSameSpecOutput/1000).toFixed(1)}k</div></div>`:'',
+    pct!==null?`<div class="sc"><div class="sl2">Parse</div><div class="sv" style="color:${pct>=75?'#3B6D11':pct>=50?'#854F0B':'#A32D2D'}">${pct}%</div></div>`:'',
+    myDeaths?`<div class="sc"><div class="sl2">Deaths</div><div class="sv" style="color:#A32D2D">${myDeaths}</div></div>`:'',
+    mySpec?`<div class="sc"><div class="sl2">Spec</div><div class="sv" style="font-size:13px">${mySpec}</div></div>`:'',
   ].filter(Boolean).join('');
-  let html=`<div class="sum-grid">${sumCards}</div>`;
+
+  const{good,bad}=buildTop3(myBuffs,topParseBuffs,myOutput,topSameSpecOutput,myParse,myDeaths);
+  const top3Html=`<div class="summary-panels">
+    <div class="panel panel-good">
+      <div class="panel-title g"><i class="ti ti-thumb-up" style="font-size:12px;margin-right:4px"></i>Top 3 doing well</div>
+      ${good.length?good.map(g=>`<div class="panel-item"><div class="panel-dot g"></div><div>${g}</div></div>`).join(''):'<div style="font-size:12px;color:var(--text2)">Not enough data.</div>'}
+    </div>
+    <div class="panel panel-bad">
+      <div class="panel-title b"><i class="ti ti-thumb-down" style="font-size:12px;margin-right:4px"></i>Top 3 to improve</div>
+      ${bad.length?bad.map(b=>`<div class="panel-item"><div class="panel-dot b"></div><div>${b}</div></div>`).join(''):'<div style="font-size:12px;color:var(--text2)">Nothing critical found!</div>'}
+    </div>
+  </div>`;
+
+  let html=`<div class="sgrid">${sumCards}</div>${top3Html}`;
+
   if(aiSummary){
     const bullets=aiSummary.split('\n').filter(l=>l.trim().startsWith('-')).map(l=>l.trim().replace(/^-\s*/,''));
-    if(bullets.length)html+=`<div class="ai-block"><div class="ai-label"><i class="ti ti-sparkles" style="font-size:13px;margin-right:4px"></i>AI data summary</div>${bullets.map(b=>`<div style="display:flex;gap:8px;margin-bottom:5px"><span style="color:#B8960C;flex-shrink:0">—</span><span>${b}</span></div>`).join('')}</div>`;
+    if(bullets.length)html+=`<div style="background:var(--bg2);border-radius:var(--rl);padding:1rem 1.25rem;margin-top:10px;font-size:13.5px;line-height:1.7"><div style="font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#B8960C;margin-bottom:6px"><i class="ti ti-sparkles" style="font-size:13px;margin-right:4px"></i>AI data summary</div>${bullets.map(b=>`<div style="display:flex;gap:8px;margin-bottom:5px"><span style="color:#B8960C;flex-shrink:0">—</span><span>${b}</span></div>`).join('')}</div>`;
   }
+
   const cats=['Flask','Elixir','Scroll','Food','Potion','Drums','Juju/World','Enchant','Raid Buff','Cooldown','Totem/Shout/Aura','Debuff Uptime'];
-  const hdr=`<div class="cmp-header"><span>Buff / ability</span><span>You</span><span>${hasGuild?'Guild avg':'Guild'}</span><span>Top %</span><span>vs guild</span></div>`;
+  const hdr=`<div class="chdr"><span>Buff / ability</span><span>You</span><span>Same spec avg</span><span>Top %</span><span>vs spec</span></div>`;
+
   cats.forEach(cat=>{
     const isUptime=cat==='Totem/Shout/Aura'||cat==='Debuff Uptime';
     let rows='';
     if(isUptime){
       UPTIME_BUFFS.filter(b=>b.cat===cat).forEach(b=>{
         const key='u_'+b.id,mine=myBuffs[key]?.uptime;
-        if(mine===null||mine===undefined)return;
-        const gVals=guildBuffsList.map(g=>g.buffs[key]?.uptime).filter(v=>v!=null);
-        const gAvg=gVals.length?Math.round(gVals.reduce((a,c)=>a+c,0)/gVals.length):null;
         const topPct=topParseBuffs?.['u_'+b.id]?.pct??null;
-        const diff=fmtPctDiff(mine,gAvg);
-        rows+=`<div class="cmp-row"><div><div class="cmp-name">${b.name}</div><div class="cmp-sub">uptime %</div></div><div class="cmp-val">${mine}%</div><div class="cmp-val">${gAvg!==null?gAvg+'%':'—'}</div><div class="cmp-val">${topPct!==null?topPct+'%':'—'}</div><div class="cmp-diff ${diff.cls}">${diff.text}</div></div>`;
+        const diff=fmtPctDiff(mine??null,null);
+        rows+=`<div class="crow"><div><div class="cn">${b.name}</div><div class="cs">uptime %</div></div><div class="cv">${mine!==null&&mine!==undefined?mine+'%':'—'}</div><div class="cv">—</div><div class="cv">${topPct!==null?topPct+'%':'—'}</div><div class="cd neu">—</div></div>`;
       });
     } else {
       ALL_BUFFS.filter(b=>b.cat===cat).forEach(b=>{
-        const mine=myBuffs[b.id],topData=topParseBuffs?.[b.id];
-        const gVals=guildBuffsList.map(g=>g.buffs[b.id]?.count||0);
-        const gAvg=hasGuild?parseFloat((gVals.reduce((a,c)=>a+c,0)/gVals.length).toFixed(1)):null;
+        const mine=myBuffs[b.id];
+        const topData=topParseBuffs?.[b.id];
         const topPct=topData?.pct??null;
-        if(!mine?.present&&(gAvg===0||gAvg===null)&&(topPct===null||topPct===0))return;
-        const diff=fmtDiff(mine?.count||0,gAvg);
+        if(!mine?.present&&(topPct===null||topPct===0))return;
         const myVal=mine?.present?(mine.count>1?mine.count+'×':'✓'):'✗';
-        rows+=`<div class="cmp-row"><div><div class="cmp-name">${b.name}</div><div class="cmp-sub">${b.cat}</div></div><div class="cmp-val" style="color:${mine?.present?'#3B6D11':'#A32D2D'}">${myVal}</div><div class="cmp-val">${gAvg!==null?gAvg:'—'}</div><div class="cmp-val">${topPct!==null?topPct+'%':'—'}</div><div class="cmp-diff ${diff.cls}">${diff.text}</div></div>`;
+        rows+=`<div class="crow"><div><div class="cn">${b.name}</div><div class="cs">${b.cat}</div></div><div class="cv" style="color:${mine?.present?'#3B6D11':'#A32D2D'}">${myVal}</div><div class="cv">—</div><div class="cv">${topPct!==null?topPct+'%':'—'}</div><div class="cd neu">—</div></div>`;
       });
     }
-    if(rows)html+=`<div class="sec-div">${cat}</div>${hdr}${rows}`;
+    if(rows)html+=`<div class="sdiv">${cat}</div>${hdr}${rows}`;
   });
+
   det.innerHTML=html;
 }
+
+// =================== RAID LEADER TAB ===================
+
+async function loadReport(){
+  clearErr('rlErrMsg');
+  const code=document.getElementById('reportCode').value.trim();
+  if(!code)return showErr('rlErrMsg','Please enter a report code.');
+  try{
+    setLoading('rlLoadDots','rlLoadTxt','rlGoBtn',true,'Loading report...');
+    const q=`query($code:String!){reportData{report(code:$code){title fights(killType:Kills){id name kill startTime endTime averageItemLevel}}}}`;
+    const res=await gql(q,{code});
+    const report=res?.data?.reportData?.report;
+    if(!report)throw new Error('Report not found. Check the code.');
+    const fights=report.fights||[];
+    if(!fights.length)throw new Error('No kill fights found in this report.');
+    rlFights=fights;
+    rlReportCode=code;
+    setLoading('rlLoadDots','rlLoadTxt','rlGoBtn',false);
+    renderFightSelector(fights);
+    document.getElementById('rlResults').style.display='block';
+  }catch(e){setLoading('rlLoadDots','rlLoadTxt','rlGoBtn',false);showErr('rlErrMsg',e.message||'Something went wrong.');}
+}
+
+function renderFightSelector(fights){
+  const c=document.getElementById('fightSelectPills');c.innerHTML='';
+  fights.forEach((f,i)=>{
+    const p=document.createElement('button');p.className='bpill';p.textContent=f.name;
+    p.onclick=()=>selectRlFight(f,p);c.appendChild(p);
+  });
+}
+
+async function selectRlFight(fight,el){
+  document.querySelectorAll('#fightSelectPills .bpill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  selRlFight=fight;
+  document.getElementById('overviewTable').innerHTML=`<div class="dots on" style="padding:8px 0"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span style="font-size:13px">Loading all players for ${fight.name}...</span></div>`;
+  try{
+    await loadRaidOverview(fight);
+  }catch(e){
+    document.getElementById('overviewTable').innerHTML=`<div style="color:#A32D2D;font-size:13px;padding:8px 0">Error: ${e.message}</div>`;
+  }
+}
+
+async function loadRaidOverview(fight){
+  const q=`query($code:String!,$fid:Int!){reportData{report(code:$code){
+    table(fightIDs:[$fid],dataType:DamageDone)
+    rankings(playerMetric:dps,compare:Parses)
+    buffs:events(fightIDs:[$fid],dataType:Buffs,limit:10000){data}
+    deaths:events(fightIDs:[$fid],dataType:Deaths,limit:100){data}
+  }}}`;
+  const res=await gql(q,{code:rlReportCode,fid:fight.id});
+  const rep=res?.data?.reportData?.report;
+
+  let players=[];
+  try{
+    const tbl=typeof rep?.table==='string'?JSON.parse(rep.table):rep?.table;
+    players=tbl?.data?.entries||[];
+  }catch(e){}
+
+  const rankings=[];
+  try{
+    const rnk=typeof rep?.rankings==='string'?JSON.parse(rep.rankings):rep?.rankings;
+    rankings.push(...(rnk?.data||[]));
+  }catch(e){}
+
+  const buffEvents=rep?.buffs?.data||[];
+  const deathEvents=rep?.deaths?.data||[];
+
+  const fStart=fight.startTime,fEnd=fight.endTime;
+
+  const playerData=players.map(p=>{
+    const rank=rankings.find(r=>r.name?.toLowerCase()===p.name?.toLowerCase());
+    const myBuffs=extractBuffs(buffEvents,[],fStart,fEnd);
+    const deaths=deathEvents.filter(d=>d.targetID===p.id).length;
+
+    // find top same spec output
+    const spec=rank?.spec||null;
+    const sameSpecRankings=rankings.filter(r=>r.spec===spec&&r.name?.toLowerCase()!==p.name?.toLowerCase());
+    const topSameSpec=sameSpecRankings.length?Math.max(...sameSpecRankings.map(r=>r.amount||0)):null;
+
+    // missing key buffs
+    const missingBuffs=ALL_BUFFS.filter(b=>!myBuffs[b.id]?.present&&['Flask','Potion','Food','Drums'].includes(b.cat)).map(b=>b.name);
+
+    return{
+      name:p.name,
+      classId:p.type,
+      spec:spec||'Unknown',
+      output:p.total||0,
+      topSameSpec,
+      parse:rank?.rankPercent??null,
+      deaths,
+      myBuffs,
+      missingBuffs:missingBuffs.slice(0,3),
+    };
+  }).sort((a,b)=>b.output-a.output);
+
+  renderOverviewTable(playerData,fight.name);
+}
+
+function renderOverviewTable(players,fightName){
+  const c=document.getElementById('overviewTable');
+  let html=`<div class="sdiv">${fightName} — ${players.length} players</div>
+  <table class="overview-table">
+    <thead><tr>
+      <th>Player</th>
+      <th>Output</th>
+      <th>vs spec</th>
+      <th>Parse</th>
+      <th>Deaths</th>
+      <th>Issues</th>
+    </tr></thead>
+    <tbody>`;
+
+  players.forEach((p,i)=>{
+    const{cls,label}=parseBadge(p.parse);
+    const ratio=p.topSameSpec&&p.output?Math.round((p.output/p.topSameSpec)*100):null;
+    const ratioColor=ratio===null?'var(--text2)':ratio>=90?'#3B6D11':ratio>=75?'#854F0B':'#A32D2D';
+    const issueCount=p.missingBuffs.length+(p.deaths>0?1:0);
+    const issueColor=issueCount===0?'#3B6D11':issueCount<=2?'#854F0B':'#A32D2D';
+
+    html+=`<tr onclick="togglePlayerDetail(${i})" id="prow${i}">
+      <td>
+        <div class="player-name">${p.name}</div>
+        <div class="player-class">${CLASS_NAMES[p.classId]||'Unknown'} · ${p.spec}</div>
+      </td>
+      <td style="text-align:center;font-weight:500">${(p.output/1000).toFixed(1)}k</td>
+      <td style="text-align:center;font-weight:500;color:${ratioColor}">${ratio!==null?ratio+'%':'—'}</td>
+      <td style="text-align:center"><span class="pbadge ${cls}" style="font-size:10px">${label}</span></td>
+      <td style="text-align:center;font-weight:500;color:${p.deaths>0?'#A32D2D':'#3B6D11'}">${p.deaths}</td>
+      <td style="text-align:center;font-weight:500;color:${issueColor}">${issueCount} issue${issueCount!==1?'s':''}</td>
+    </tr>
+    <tr id="pdetrow${i}" style="display:none">
+      <td colspan="6" style="padding:0">
+        <div class="player-detail" id="pdet${i}">
+          ${p.missingBuffs.length?`<div class="issue-list"><strong style="font-size:11px;font-family:'Cinzel',serif;letter-spacing:.06em;text-transform:uppercase;color:#A32D2D">Missing:</strong> ${p.missingBuffs.join(', ')}</div>`:'<div class="issue-list issue-good">✓ No missing key consumables detected</div>'}
+          ${p.deaths>0?`<div class="issue-list issue-bad" style="margin-top:4px">✗ Died ${p.deaths} time${p.deaths>1?'s':''}</div>`:''}
+          ${ratio!==null&&ratio<80?`<div class="issue-list issue-bad" style="margin-top:4px">✗ Output ${ratio}% of top same-spec player</div>`:''}
+          ${ratio!==null&&ratio>=90?`<div class="issue-list issue-good" style="margin-top:4px">✓ Output within ${100-ratio}% of top same-spec player</div>`:''}
+        </div>
+      </td>
+    </tr>`;
+  });
+
+  html+=`</tbody></table>`;
+  c.innerHTML=html;
+}
+
+function togglePlayerDetail(i){
+  const row=document.getElementById('pdetrow'+i);
+  const det=document.getElementById('pdet'+i);
+  const isOpen=row.style.display!=='none';
+  document.querySelectorAll('[id^="pdetrow"]').forEach(r=>r.style.display='none');
+  document.querySelectorAll('[id^="prow"]').forEach(r=>r.classList.remove('expanded'));
+  if(!isOpen){
+    row.style.display='table-row';
+    det.classList.add('on');
+    document.getElementById('prow'+i).classList.add('expanded');
+  }
+}
+
 buildRaidPills();
 </script>
 </body>
