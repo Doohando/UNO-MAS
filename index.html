@@ -355,23 +355,143 @@ const RAIDS={
   'Sunwell Plateau':{encounters:[{id:724,name:"Kalecgos"},{id:725,name:"Brutallus"},{id:726,name:"Felmyst"},{id:727,name:"Eredar Twins"},{id:728,name:"M'uru"},{id:729,name:"Kil'jaeden"}]}
 };
 
+// cls: array of classIDs that should see this buff. Empty = all classes.
+// 1=Warrior 2=Paladin 3=Hunter 4=Rogue 5=Priest 7=Shaman 8=Mage 9=Warlock 10=Druid
 const ALL_BUFFS=[
-  {id:28518,name:'Flask of Relentless Assault',cat:'Flask'},{id:28519,name:'Flask of Blinding Light',cat:'Flask'},{id:28520,name:'Flask of Pure Death',cat:'Flask'},{id:28521,name:'Flask of Mighty Restoration',cat:'Flask'},{id:28522,name:'Flask of Fortification',cat:'Flask'},{id:17539,name:'Flask of Distilled Wisdom',cat:'Flask'},
-  {id:22491,name:'Elixir of Major Agility',cat:'Elixir'},{id:28103,name:'Elixir of Major Strength',cat:'Elixir'},{id:28488,name:'Elixir of Major Firepower',cat:'Elixir'},{id:28486,name:'Elixir of Major Shadow Power',cat:'Elixir'},{id:28490,name:'Elixir of Major Frost Power',cat:'Elixir'},{id:28491,name:'Elixir of Major Arcane Power',cat:'Elixir'},{id:28493,name:'Elixir of Healing Power',cat:'Elixir'},{id:28494,name:'Elixir of Draenic Wisdom',cat:'Elixir'},{id:28495,name:'Elixir of Major Mageblood',cat:'Elixir'},{id:39627,name:'Elixir of Mastery',cat:'Elixir'},{id:28497,name:"Adept's Elixir",cat:'Elixir'},{id:28509,name:'Elixir of the Mongoose',cat:'Elixir'},
-  {id:33721,name:'Scroll of Agility VI',cat:'Scroll'},{id:33726,name:'Scroll of Strength VI',cat:'Scroll'},{id:33727,name:'Scroll of Stamina VI',cat:'Scroll'},{id:33728,name:'Scroll of Intellect VI',cat:'Scroll'},{id:33729,name:'Scroll of Spirit VI',cat:'Scroll'},{id:27498,name:'Scroll of Agility V',cat:'Scroll'},{id:27503,name:'Scroll of Strength V',cat:'Scroll'},{id:27499,name:'Scroll of Intellect V',cat:'Scroll'},
-  {id:33254,name:'Spicy Crawdad',cat:'Food'},{id:33261,name:'Blackened Basilisk',cat:'Food'},{id:33263,name:'Roasted Clefthoof',cat:'Food'},{id:33265,name:'Warp Burger',cat:'Food'},{id:33271,name:'Golden Fish Sticks',cat:'Food'},{id:33272,name:'Poached Bluefish',cat:'Food'},{id:27657,name:'Grilled Mudfish',cat:'Food'},{id:27658,name:'Smoked Talbuk Venison',cat:'Food'},
-  {id:22838,name:'Haste Potion',cat:'Potion'},{id:28508,name:'Destruction Potion',cat:'Potion'},{id:22832,name:'Super Mana Potion',cat:'Potion'},{id:28714,name:'Flame Cap',cat:'Potion'},{id:38929,name:'Fel Mana Potion',cat:'Potion'},{id:27869,name:'Dark Rune',cat:'Potion'},
-  {id:35476,name:'Drums of Battle',cat:'Drums'},{id:35477,name:'Drums of War',cat:'Drums'},{id:35478,name:'Drums of Restoration',cat:'Drums'},{id:35279,name:'Drums of Speed',cat:'Drums'},
-  {id:16323,name:'Juju Power',cat:'Juju/World'},{id:16329,name:'Juju Might',cat:'Juju/World'},{id:17038,name:'Winterfall Firewater',cat:'Juju/World'},{id:11405,name:'Elixir of the Giants',cat:'Juju/World'},
-  {id:25661,name:'Mongoose proc',cat:'Enchant'},{id:33307,name:'Executioner proc',cat:'Enchant'},{id:28093,name:'Spellsurge proc',cat:'Enchant'},
-  {id:25898,name:'Greater Blessing of Kings',cat:'Raid Buff'},{id:25899,name:'Greater Blessing of Might',cat:'Raid Buff'},{id:25290,name:'Greater Blessing of Wisdom',cat:'Raid Buff'},{id:27837,name:'Mark of the Wild',cat:'Raid Buff'},
-  {id:2825,name:'Bloodlust',cat:'Cooldown'},{id:32182,name:'Heroism',cat:'Cooldown'},{id:12472,name:'Icy Veins',cat:'Cooldown'},{id:12042,name:'Arcane Power',cat:'Cooldown'},{id:11129,name:'Combustion',cat:'Cooldown'},{id:31884,name:'Avenging Wrath',cat:'Cooldown'},{id:1719,name:'Recklessness',cat:'Cooldown'},{id:12292,name:'Death Wish',cat:'Cooldown'},{id:19574,name:'Bestial Wrath',cat:'Cooldown'},{id:3045,name:'Rapid Fire',cat:'Cooldown'},{id:13750,name:'Adrenaline Rush',cat:'Cooldown'},{id:13877,name:'Blade Flurry',cat:'Cooldown'},{id:10060,name:'Power Infusion',cat:'Cooldown'},{id:34433,name:'Shadowfiend',cat:'Cooldown'},{id:16190,name:'Mana Tide Totem',cat:'Cooldown'},{id:29166,name:'Innervate',cat:'Cooldown'},
+  // Flasks - class specific
+  {id:28518,name:'Flask of Relentless Assault',cat:'Flask',cls:[1,3,4,7,10]},
+  {id:28519,name:'Flask of Blinding Light',cat:'Flask',cls:[2,5,10]},
+  {id:28520,name:'Flask of Pure Death',cat:'Flask',cls:[5,8,9]},
+  {id:28521,name:'Flask of Mighty Restoration',cat:'Flask',cls:[2,5,7,10]},
+  {id:28522,name:'Flask of Fortification',cat:'Flask',cls:[1,2]},
+  {id:17539,name:'Flask of Distilled Wisdom',cat:'Flask',cls:[5,8,9]},
+
+  // Elixirs - class specific
+  {id:22491,name:'Elixir of Major Agility',cat:'Elixir',cls:[3,4,7,10]},
+  {id:28103,name:'Elixir of Major Strength',cat:'Elixir',cls:[1,2,4,7]},
+  {id:28488,name:'Elixir of Major Firepower',cat:'Elixir',cls:[8]},
+  {id:28486,name:'Elixir of Major Shadow Power',cat:'Elixir',cls:[5,9]},
+  {id:28490,name:'Elixir of Major Frost Power',cat:'Elixir',cls:[8]},
+  {id:28491,name:'Elixir of Major Arcane Power',cat:'Elixir',cls:[8]},
+  {id:28493,name:'Elixir of Healing Power',cat:'Elixir',cls:[2,5,7,10]},
+  {id:28494,name:'Elixir of Draenic Wisdom',cat:'Elixir',cls:[5,7,8,9,10]},
+  {id:28495,name:'Elixir of Major Mageblood',cat:'Elixir',cls:[5,7,8,9,10]},
+  {id:39627,name:'Elixir of Mastery',cat:'Elixir',cls:[1,2,3,4,7,10]},
+  {id:28497,name:"Adept's Elixir",cat:'Elixir',cls:[5,8,9,10]},
+  {id:28509,name:'Elixir of the Mongoose',cat:'Elixir',cls:[3,4,10]},
+
+  // Scrolls - class specific
+  {id:33721,name:'Scroll of Agility VI',cat:'Scroll',cls:[3,4,7,10]},
+  {id:33726,name:'Scroll of Strength VI',cat:'Scroll',cls:[1,2,4,7]},
+  {id:33727,name:'Scroll of Stamina VI',cat:'Scroll',cls:[1,2]},
+  {id:33728,name:'Scroll of Intellect VI',cat:'Scroll',cls:[5,7,8,9,10]},
+  {id:33729,name:'Scroll of Spirit VI',cat:'Scroll',cls:[2,5,10]},
+  {id:27498,name:'Scroll of Agility V',cat:'Scroll',cls:[3,4,7,10]},
+  {id:27503,name:'Scroll of Strength V',cat:'Scroll',cls:[1,2,4,7]},
+  {id:27499,name:'Scroll of Intellect V',cat:'Scroll',cls:[5,7,8,9,10]},
+
+  // Food - class specific
+  {id:33254,name:'Spicy Crawdad',cat:'Food',cls:[1,2,3,4,7,10]},
+  {id:33261,name:'Blackened Basilisk',cat:'Food',cls:[5,8,9,10]},
+  {id:33263,name:'Roasted Clefthoof',cat:'Food',cls:[1,7]},
+  {id:33265,name:'Warp Burger',cat:'Food',cls:[3,4,10]},
+  {id:33271,name:'Golden Fish Sticks',cat:'Food',cls:[2,5,10]},
+  {id:33272,name:'Poached Bluefish',cat:'Food',cls:[5,8,9]},
+  {id:27657,name:'Grilled Mudfish',cat:'Food',cls:[3,4,10]},
+  {id:27658,name:'Smoked Talbuk Venison',cat:'Food',cls:[1,2,7]},
+
+  // Potions - class specific
+  {id:22838,name:'Haste Potion',cat:'Potion',cls:[1,3,4,7,10]},
+  {id:28508,name:'Destruction Potion',cat:'Potion',cls:[5,8,9]},
+  {id:22832,name:'Super Mana Potion',cat:'Potion',cls:[2,5,7,8,9,10]},
+  {id:28714,name:'Flame Cap',cat:'Potion',cls:[1,3,4,7,8,10]},
+  {id:38929,name:'Fel Mana Potion',cat:'Potion',cls:[5,7,8,9,10]},
+  {id:27869,name:'Dark Rune',cat:'Potion',cls:[5,7,8,9,10]},
+
+  // Drums - all non-shaman should use these
+  {id:35476,name:'Drums of Battle',cat:'Drums',cls:[1,2,3,4,5,8,9,10]},
+  {id:35477,name:'Drums of War',cat:'Drums',cls:[1,2,3,4,5,8,9,10]},
+  {id:35478,name:'Drums of Restoration',cat:'Drums',cls:[2,5,10]},
+  {id:35279,name:'Drums of Speed',cat:'Drums',cls:[3,4,10]},
+
+  // Juju/World - melee focused
+  {id:16323,name:'Juju Power',cat:'Juju/World',cls:[1,2,4,7,10]},
+  {id:16329,name:'Juju Might',cat:'Juju/World',cls:[1,4,7,10]},
+  {id:17038,name:'Winterfall Firewater',cat:'Juju/World',cls:[1,2,4,7,10]},
+  {id:11405,name:'Elixir of the Giants',cat:'Juju/World',cls:[1,2,4,7,10]},
+
+  // Enchant procs - weapon based
+  {id:25661,name:'Mongoose proc',cat:'Enchant',cls:[1,2,3,4,7,10]},
+  {id:33307,name:'Executioner proc',cat:'Enchant',cls:[1,4,10]},
+  {id:28093,name:'Spellsurge proc',cat:'Enchant',cls:[5,7,8,9,10]},
+
+  // Raid buffs - all classes receive these
+  {id:25898,name:'Greater Blessing of Kings',cat:'Raid Buff',cls:[]},
+  {id:25899,name:'Greater Blessing of Might',cat:'Raid Buff',cls:[1,2,3,4,7,10]},
+  {id:25290,name:'Greater Blessing of Wisdom',cat:'Raid Buff',cls:[2,5,7,8,9,10]},
+  {id:27837,name:'Mark of the Wild',cat:'Raid Buff',cls:[]},
+
+  // Cooldowns - class specific
+  {id:2825,name:'Bloodlust',cat:'Cooldown',cls:[7]},
+  {id:32182,name:'Heroism',cat:'Cooldown',cls:[7]},
+  {id:16190,name:'Mana Tide Totem',cat:'Cooldown',cls:[7]},
+  {id:16166,name:'Elemental Mastery',cat:'Cooldown',cls:[7]},
+  {id:12472,name:'Icy Veins',cat:'Cooldown',cls:[8]},
+  {id:12042,name:'Arcane Power',cat:'Cooldown',cls:[8]},
+  {id:11129,name:'Combustion',cat:'Cooldown',cls:[8]},
+  {id:12043,name:'Presence of Mind',cat:'Cooldown',cls:[8]},
+  {id:31884,name:'Avenging Wrath',cat:'Cooldown',cls:[2]},
+  {id:642,name:'Divine Shield',cat:'Cooldown',cls:[2]},
+  {id:1719,name:'Recklessness',cat:'Cooldown',cls:[1]},
+  {id:12292,name:'Death Wish',cat:'Cooldown',cls:[1]},
+  {id:871,name:'Shield Wall',cat:'Cooldown',cls:[1]},
+  {id:12975,name:'Last Stand',cat:'Cooldown',cls:[1]},
+  {id:19574,name:'Bestial Wrath',cat:'Cooldown',cls:[3]},
+  {id:3045,name:'Rapid Fire',cat:'Cooldown',cls:[3]},
+  {id:13750,name:'Adrenaline Rush',cat:'Cooldown',cls:[4]},
+  {id:13877,name:'Blade Flurry',cat:'Cooldown',cls:[4]},
+  {id:31224,name:'Cloak of Shadows',cat:'Cooldown',cls:[4]},
+  {id:10060,name:'Power Infusion',cat:'Cooldown',cls:[5]},
+  {id:34433,name:'Shadowfiend',cat:'Cooldown',cls:[5]},
+  {id:14751,name:'Inner Focus',cat:'Cooldown',cls:[5]},
+  {id:29166,name:'Innervate',cat:'Cooldown',cls:[10]},
+  {id:22812,name:'Barkskin',cat:'Cooldown',cls:[10]},
+  {id:17116,name:"Nature's Swiftness",cat:'Cooldown',cls:[10,7]},
 ];
 
 const UPTIME_BUFFS=[
-  {id:25587,name:'Windfury Totem',cat:'Totem/Shout/Aura'},{id:25528,name:'Strength of Earth Totem',cat:'Totem/Shout/Aura'},{id:3738,name:'Wrath of Air Totem',cat:'Totem/Shout/Aura'},{id:6673,name:'Battle Shout',cat:'Totem/Shout/Aura'},{id:1160,name:'Demoralizing Shout',cat:'Totem/Shout/Aura'},{id:19506,name:'Trueshot Aura',cat:'Totem/Shout/Aura'},{id:24858,name:'Moonkin Aura',cat:'Totem/Shout/Aura'},{id:17007,name:'Leader of the Pack',cat:'Totem/Shout/Aura'},
-  {id:14325,name:"Hunter's Mark",cat:'Debuff Uptime'},{id:26993,name:'Faerie Fire',cat:'Debuff Uptime'},{id:33876,name:'Mangle',cat:'Debuff Uptime'},{id:27228,name:'Curse of Elements',cat:'Debuff Uptime'},{id:15258,name:'Shadow Weaving',cat:'Debuff Uptime'},{id:34914,name:'Vampiric Touch',cat:'Debuff Uptime'},
+  // Shaman totems
+  {id:25587,name:'Windfury Totem',cat:'Totem/Shout/Aura',cls:[7]},
+  {id:25528,name:'Strength of Earth Totem',cat:'Totem/Shout/Aura',cls:[7]},
+  {id:3738,name:'Wrath of Air Totem',cat:'Totem/Shout/Aura',cls:[7]},
+  {id:5394,name:'Healing Stream Totem',cat:'Totem/Shout/Aura',cls:[7]},
+  {id:10497,name:'Mana Spring Totem',cat:'Totem/Shout/Aura',cls:[7]},
+  // Warrior shouts
+  {id:6673,name:'Battle Shout',cat:'Totem/Shout/Aura',cls:[1]},
+  {id:1160,name:'Demoralizing Shout',cat:'Totem/Shout/Aura',cls:[1]},
+  // Hunter
+  {id:19506,name:'Trueshot Aura',cat:'Totem/Shout/Aura',cls:[3]},
+  {id:14325,name:"Hunter's Mark",cat:'Debuff Uptime',cls:[3]},
+  // Druid
+  {id:24858,name:'Moonkin Aura',cat:'Totem/Shout/Aura',cls:[10]},
+  {id:17007,name:'Leader of the Pack',cat:'Totem/Shout/Aura',cls:[10]},
+  {id:26993,name:'Faerie Fire',cat:'Debuff Uptime',cls:[10]},
+  {id:33876,name:'Mangle',cat:'Debuff Uptime',cls:[10]},
+  // Warlock
+  {id:27228,name:'Curse of Elements',cat:'Debuff Uptime',cls:[9]},
+  {id:27226,name:'Curse of Recklessness',cat:'Debuff Uptime',cls:[9]},
+  {id:30213,name:'Fel Armor',cat:'Totem/Shout/Aura',cls:[9]},
+  // Priest
+  {id:15258,name:'Shadow Weaving',cat:'Debuff Uptime',cls:[5]},
+  {id:34914,name:'Vampiric Touch',cat:'Debuff Uptime',cls:[5]},
+  {id:15286,name:'Vampiric Embrace',cat:'Totem/Shout/Aura',cls:[5]},
 ];
+
+function getClassBuffs(classId){
+  const buffs=ALL_BUFFS.filter(b=>!b.cls||b.cls.length===0||b.cls.includes(classId));
+  const uptimes=UPTIME_BUFFS.filter(b=>!b.cls||b.cls.length===0||b.cls.includes(classId));
+  return{buffs,uptimes};
+}
 
 function showErr(id,m){const e=document.getElementById(id);e.textContent=m;e.classList.add('on')}
 function clearErr(id){document.getElementById(id).classList.remove('on')}
@@ -429,14 +549,15 @@ function toggleBoss(id,el){
 }
 
 function getSpellId(e){return e.abilityGameID||e.ability?.guid||e.ability?.id||0;}
-function extractBuffs(buffEvents,castEvents,fStart,fEnd){
+function extractBuffs(buffEvents,castEvents,fStart,fEnd,classId){
+  const{buffs,uptimes}=getClassBuffs(classId||0);
   const r={};
-  ALL_BUFFS.forEach(b=>{
+  buffs.forEach(b=>{
     const applies=buffEvents.filter(e=>(e.type==='applybuff'||e.type==='refreshbuff')&&getSpellId(e)===b.id);
     const casts=castEvents.filter(e=>e.type==='cast'&&getSpellId(e)===b.id);
     r[b.id]={present:applies.length>0||casts.length>0,count:Math.max(applies.length,casts.length),name:b.name,cat:b.cat};
   });
-  UPTIME_BUFFS.forEach(b=>{
+  uptimes.forEach(b=>{
     const relevant=buffEvents.filter(e=>getSpellId(e)===b.id);
     let uptime=null;
     if(relevant.length){
@@ -458,7 +579,7 @@ function extractBuffs(buffEvents,castEvents,fStart,fEnd){
   return r;
 }
 
-function buildTop3(myBuffs,topParseBuffs,myOutput,topOutput,myParse,myDeaths){
+function buildTop3(myBuffs,topParseBuffs,myOutput,topOutput,myParse,myDeaths,classId){
   const good=[],bad=[];
   const pct=myParse!==null?Math.round(myParse):null;
   if(pct!==null&&pct>=75)good.push(`Parse is ${pct}% — strong performance`);
@@ -469,13 +590,14 @@ function buildTop3(myBuffs,topParseBuffs,myOutput,topOutput,myParse,myDeaths){
   }
   if(myDeaths===0)good.push('Zero deaths — stayed alive the whole fight');
   else bad.push(`Died ${myDeaths} time${myDeaths>1?'s':''} — each death is a significant loss`);
-  ALL_BUFFS.forEach(b=>{
+  const{buffs:t3Buffs,uptimes:t3Uptimes}=getClassBuffs(classId||0);
+  t3Buffs.forEach(b=>{
     const mine=myBuffs[b.id];const topData=topParseBuffs?.[b.id];
     if(!mine||!topData)return;
     if(mine.present&&topData.pct>=80)good.push(`Used ${b.name} — ${topData.pct}% of top parses use it`);
     if(!mine.present&&topData.pct>=70)bad.push(`Missing ${b.name} — ${topData.pct}% of top parses use it`);
   });
-  UPTIME_BUFFS.forEach(b=>{
+  t3Uptimes.forEach(b=>{
     const u=myBuffs['u_'+b.id]?.uptime;
     if(u===null||u===undefined)return;
     if(u>=95)good.push(`${b.name} uptime ${u}% — excellent`);
@@ -595,7 +717,7 @@ async function loadComparison(i,fight){
   // For buffs: we want buffs applied TO the player (targetID) for consumables/flasks
   // AND buffs applied BY the player (sourceID) for things like totems they dropped
   const mybuffEvents=mySourceId?buffEvents.filter(e=>e.targetID===mySourceId||e.sourceID===mySourceId):buffEvents;
-  const myBuffs=extractBuffs(mybuffEvents,mycastEvents,fStart,fEnd);
+  const myBuffs=extractBuffs(mybuffEvents,mycastEvents,fStart,fEnd,classId);
   const badge=document.getElementById('pb'+i);
   if(myParse!==null){const{cls,label}=parseBadge(myParse);badge.className='pbadge '+cls;badge.textContent=label;}
 
@@ -629,11 +751,11 @@ Write 3-5 bullet points. SPECIFIC DATA with exact numbers only. Format: "- You u
   }catch(e){}
 
   const fightDuration=(fEnd-fStart)/1000;
-  renderFull(i,{charName,myOutput,topSameSpecOutput,myParse,mySpec,myBuffs,myDeaths,topParseBuffs,aiSummary,bossName,fightDuration});
+  renderFull(i,{charName,myOutput,topSameSpecOutput,myParse,mySpec,myBuffs,myDeaths,topParseBuffs,aiSummary,bossName,fightDuration,classId});
 }
 
 function renderFull(i,data){
-  const{charName,myOutput,topSameSpecOutput,myParse,mySpec,myBuffs,myDeaths,topParseBuffs,aiSummary,bossName,fightDuration}=data;
+  const{charName,myOutput,topSameSpecOutput,myParse,mySpec,myBuffs,myDeaths,topParseBuffs,aiSummary,bossName,fightDuration,classId}=data;
   const det=document.getElementById('det'+i);
   const pct=myParse!==null?Math.round(myParse):null;
 
@@ -647,7 +769,7 @@ function renderFull(i,data){
     mySpec?`<div class="sc"><div class="sl2">Spec</div><div class="sv" style="font-size:13px">${mySpec}</div></div>`:'',
   ].filter(Boolean).join('');
 
-  const{good,bad}=buildTop3(myBuffs,topParseBuffs,myOutput,topSameSpecOutput,myParse,myDeaths);
+  const{good,bad}=buildTop3(myBuffs,topParseBuffs,myOutput,topSameSpecOutput,myParse,myDeaths,classId);
   const top3Html=`<div class="summary-panels">
     <div class="panel panel-good">
       <div class="panel-title g"><i class="ti ti-thumb-up" style="font-size:12px;margin-right:4px"></i>Top 3 doing well</div>
@@ -666,6 +788,7 @@ function renderFull(i,data){
     if(bullets.length)html+=`<div style="background:var(--bg2);border-radius:var(--rl);padding:1rem 1.25rem;margin-top:10px;font-size:13.5px;line-height:1.7"><div style="font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#B8960C;margin-bottom:6px"><i class="ti ti-sparkles" style="font-size:13px;margin-right:4px"></i>AI data summary</div>${bullets.map(b=>`<div style="display:flex;gap:8px;margin-bottom:5px"><span style="color:#B8960C;flex-shrink:0">—</span><span>${b}</span></div>`).join('')}</div>`;
   }
 
+  const{buffs:classBufList,uptimes:classUptimeList}=getClassBuffs(classId||0);
   const cats=['Flask','Elixir','Scroll','Food','Potion','Drums','Juju/World','Enchant','Raid Buff','Cooldown','Totem/Shout/Aura','Debuff Uptime'];
   const hdr=`<div class="chdr"><span>Buff / ability</span><span>You</span><span>Same spec avg</span><span>Top %</span><span>vs spec</span></div>`;
 
@@ -673,14 +796,14 @@ function renderFull(i,data){
     const isUptime=cat==='Totem/Shout/Aura'||cat==='Debuff Uptime';
     let rows='';
     if(isUptime){
-      UPTIME_BUFFS.filter(b=>b.cat===cat).forEach(b=>{
+      classUptimeList.filter(b=>b.cat===cat).forEach(b=>{
         const key='u_'+b.id,mine=myBuffs[key]?.uptime;
         const topPct=topParseBuffs?.['u_'+b.id]?.pct??null;
         const diff=fmtPctDiff(mine??null,null);
         rows+=`<div class="crow"><div><div class="cn">${b.name}</div><div class="cs">uptime %</div></div><div class="cv">${mine!==null&&mine!==undefined?mine+'%':'—'}</div><div class="cv">—</div><div class="cv">${topPct!==null?topPct+'%':'—'}</div><div class="cd neu">—</div></div>`;
       });
     } else {
-      ALL_BUFFS.filter(b=>b.cat===cat).forEach(b=>{
+      classBufList.filter(b=>b.cat===cat).forEach(b=>{
         const mine=myBuffs[b.id];
         const topData=topParseBuffs?.[b.id];
         const topPct=topData?.pct??null;
